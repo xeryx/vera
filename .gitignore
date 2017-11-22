@@ -1,0 +1,10 @@
+npm-debug.log
+galina/node_modules/
+galina/build/
+galina/public/
+
+famke/npm-debug.log
+famke/node_modules/
+famke/public
+
+
