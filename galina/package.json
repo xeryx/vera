@@ -20,7 +20,7 @@
 
   "proxy": {
     "/": {
-        "target": "http://localhost:3000"
+        "target": "http://newcontroller.perftestmv.local:3000"
     }
   }
 

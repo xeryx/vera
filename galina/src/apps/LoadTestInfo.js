@@ -1,80 +1,71 @@
 //import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
 import React, { Component } from 'react';
-import {getAllTestRuns, getSystemUnderTestResources,getPageResults,testDbConnection} from '../serverapi/loaddbapi.js'
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import myTheme from '../themes/myTheme';
-import Paper from 'material-ui/Paper';
-import CircularProgress from 'material-ui/CircularProgress';
+import {testDbConnection,getAllTestRuns} from '../serverapi/loaddbapi'
+import AllRunsInfo from '../my_modules/AllRunsInfo'
+import DbStatusInfo from "../my_modules/DbStatusInfo"
 
-
-import JSONTree from 'react-json-tree';
 
 import './LoadTestInfo.css';
 
 class LoadTestInfo extends Component {
+
   constructor(props) {
     super(props); 
 
     this.getAllTestRunsInfo = this.getAllTestRunsInfo.bind(this); 
     this.testDbConnectionInfo = this.testDbConnectionInfo.bind(this); 
 
-    this.state = {databaseStatus:false,runInfo:{}, waiting:false}; 
+    this.state = {
+                  databaseStatus:false,
+                  runInfo:{}, 
+                  dbStatusWaiting:false,
+                  allRunsWaiting:false
+                
+                }; 
 
   }
 
-   render() {    
+  render() {    
 
-
-    var contents = <JSONTree data={this.state.runInfo}/>;
-    if(this.state.waiting) {
-      contents = <CircularProgress/>;
-    }
-
-
-    return (<div>
-      <MuiThemeProvider muiTheme={getMuiTheme(myTheme)}><div> 
-      <Paper style={style} zDepth={2}>
-
-      {contents}
-
-      </Paper>
-      
-      </div></MuiThemeProvider>  
-    </div>);
-  }
-
-  componentWillMount = function() {
-    this.setState({waiting : true});
-  }
-
-  componentDidMount = function() {
-    this.getAllTestRunsInfo();
-
+    return(
+      <div>
+        <DbStatusInfo 
+            isDbOnline = {this.state.databaseStatus}
+            isWaiting = {this.state.dbStatusWaiting}
+            />
+        <AllRunsInfo/>
+      </div>
+    )
   }
 
 
-  getAllTestRunsInfo = function() {
-    getAllTestRuns().then(responseJson =>  this.setState({runInfo : responseJson, waiting:false}))
-    .catch(error => alert("Error: " + error.message + "\n" + error.stack))
+
+  componentDidMount() {
+    this.setState({dbStatusWaiting:true});
+    this.testDbConnectionInfo();
   }
+    
+
 
   testDbConnectionInfo = function() {
-    testDbConnection().then(response =>  {return(response)})
+    testDbConnection().then(response => { 
+                            if(response.success === "true") { 
+                              this.setState({
+                                databaseStatus:((response.data === "True")?true:false),
+                                dbStatusWaiting:false
+                              }) 
+                            } 
+    })
+    .catch(error => alert("Error: " + error.message + "\n" + error.stack))
+  }  
+
+  getAllTestRunsInfo = function() {
+    getAllTestRuns().then(responseJson =>  this.setState({runInfo : responseJson, allRunsWaiting:false}))
     .catch(error => alert("Error: " + error.message + "\n" + error.stack))
   }
 
+
 }
-
-const style = {
-  width: 500,
-  height: 200,
-  margin: "0,20,0,20",
-  padding: "10,10,10,10",
-  textAlign: 'center',
-  display: 'inline-block',
-};
-
 
 export default LoadTestInfo;
 

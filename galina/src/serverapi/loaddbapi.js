@@ -15,7 +15,7 @@ export function getAllTestRuns() {
         })
         .then(response => response.json())
         .then(requestId => getRequestResponseContent(requestId))
-        .then(responseJson => responseJson.data)
+
     );
 };
 
@@ -26,7 +26,7 @@ export function getSystemUnderTestResources(runId) {
         })
         .then(response => response.json())
         .then(requestId => getRequestResponseContent(requestId))
-        .then(responseJson => responseJson.data)
+
     );
 };
 
@@ -37,7 +37,6 @@ export function getPageResults(runId) {
         })
         .then(response => response.json())
         .then(requestId => getRequestResponseContent(requestId))
-        .then(responseJson => responseJson.data)
     );
 };
 
@@ -48,6 +47,5 @@ export function testDbConnection() {
         })
         .then(response => response.json())
         .then(requestId => getRequestResponseContent(requestId))
-        .then(responseString => responseString.data)
     );
 };
