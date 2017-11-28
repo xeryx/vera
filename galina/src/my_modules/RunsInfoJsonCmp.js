@@ -9,7 +9,7 @@ import CircularProgress from 'material-ui/CircularProgress';
 
 import JSONTree from 'react-json-tree';
 
-class RunsInfoJson extends Component {
+class RunsInfoJsonCmp extends Component {
   constructor(props) {
     super(props); 
 
@@ -73,5 +73,5 @@ const style = {
 };
 
 
-export default RunsInfoJson;
+export default RunsInfoJsonCmp;
 

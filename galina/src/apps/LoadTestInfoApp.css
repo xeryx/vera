@@ -2,4 +2,6 @@ body {
     font-family: 'Roboto', sans-serif;
     background-color:rgba(0, 15, 5, 0.87);
     padding: 10px 15px 30px 15px;   
+    font-Size:18px;
+    color:white
 }

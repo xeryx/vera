@@ -40,6 +40,27 @@ export function getPageResults(runId) {
     );
 };
 
+export function getTestRunInformation(runId) {
+    return(
+        fetch('/loaddb/getTestRunInformation/' + runId, {
+            method: "get",
+        })
+        .then(response => response.json())
+        .then(requestId => getRequestResponseContent(requestId))
+    );
+};
+
+export function getOverallResults(runId) {
+    return(
+        fetch('/loaddb/getOverallResults/' + runId, {
+            method: "get",
+        })
+        .then(response => response.json())
+        .then(requestId => getRequestResponseContent(requestId))
+    );
+};
+
+
 export function testDbConnection() {
     return(
         fetch('/loaddb/testDbConnection/', {

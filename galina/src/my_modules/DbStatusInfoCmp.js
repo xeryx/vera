@@ -5,12 +5,9 @@ import myTheme from '../themes/myTheme';
 import CircularProgress from 'material-ui/CircularProgress';
 
 
-class DbStatusInfo extends Component {
-    
-    constructor(props) {
-        super(props); 
-    }
 
+class DbStatusInfoCmp extends Component {
+    
     render() {  
 
         var color = "red";
@@ -22,15 +19,18 @@ class DbStatusInfo extends Component {
         }
 
         if(this.props.isWaiting) {
-            content = <MuiThemeProvider muiTheme={getMuiTheme(myTheme)}>
-                        <CircularProgress size={20}/>
-                    </MuiThemeProvider>         
+            content = <CircularProgress size={20}/>                      
         }
 
         return(
-            <div style={{"fontSize":"20px", "color":"white"}}>
-                <span>Database status:</span> <span style={{"color":color, "padding":"10px"}}>{content}</span> 
+
+            <div><MuiThemeProvider muiTheme={getMuiTheme(myTheme)}>
+
+            <div>
+                <span>DB connection status:</span> <span style={{"color":color, "padding":"10px"}}>{content}</span> 
             </div>
+
+            </MuiThemeProvider></div>
 
         )
     }
@@ -38,4 +38,4 @@ class DbStatusInfo extends Component {
 }          
 
 
-export default DbStatusInfo;
+export default DbStatusInfoCmp;
