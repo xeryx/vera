@@ -49,7 +49,7 @@ class AllRunsInfoCmp extends Component {
                     label="Load Test Runs" 
                     primary={true} 
                     style={{"margin":"0px 0px 15px 0px"}}
-                    onClick={this.props.runsInfoFunction} 
+                    onClick={this.props.infoFunction} 
                     disabled={this.props.isWaiting}/>
                 <DropDownMenu 
                     value={this.props.menuValue} 
@@ -69,7 +69,7 @@ class AllRunsInfoCmp extends Component {
 
 
 
-    handleChange = (event, index, value) => this.props.changeDropdownValue(value);
+    handleChange = (event, index, value) => this.props.changeDropdownValue(value,this.props.runsInfo[value].runID);
 
 }       
 

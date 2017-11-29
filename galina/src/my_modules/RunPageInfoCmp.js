@@ -12,24 +12,17 @@ class RunPageInfoCmp extends Component {
     
     render() {  
 
-        if(this.props.runsInfo.length === 0) {
-            runItems.push(<MenuItem value={0} primaryText={"None"} />)
+        var pageItems = [];
+        var waitingCircle = "" ;
+        
+
+        if(this.props.pagesInfo.length === 0) {
+            pageItems.push(<MenuItem value={0} primaryText={"None"} />)
         }
         else {
-            for (let i = 0; i < this.props.runsInfo.length; i++ ) {
-                runItems.push(<MenuItem value={i} primaryText={this.props.runsInfo[i].startTime} />);
+            for (let i = 0; i < this.props.pagesInfo.length; i++ ) {
+                pageItems.push(<MenuItem value={i} primaryText={this.props.pagesInfo[i].RequestUri} />);
             }
-            selectedRunInfo =  <div> <div>{"Users: " + this.props.runsInfo[this.props.menuValue].users} </div>
-                                <div>{"Duration: " + this.props.runsInfo[this.props.menuValue].runDuration + " ms"} </div>
-                                <div>{"Outcome: "  + this.props.runsInfo[this.props.menuValue].outcome} </div>
-                                <div>{"End time: "  + this.props.runsInfo[this.props.menuValue].endTime} </div></div>
-                                
-                                
-            
-
-
-                                
-
         }
 
         if(this.props.isWaiting) {
@@ -44,29 +37,43 @@ class RunPageInfoCmp extends Component {
                     label="Pages Info" 
                     primary={true} 
                     style={{"margin":"0px 0px 15px 0px"}}
-                    onClick={this.props.runsInfoFunction} 
+                    onClick={this.props.infoFunction} 
                     disabled={this.props.isWaiting}/>
                 <DropDownMenu 
                     value={this.props.menuValue} 
                     onChange={this.handleChange}
                     >
-                {runItems}
+                {pageItems}
                 </DropDownMenu>
                 {waitingCircle}
                 <div style={{"margin":"10px 0px 0px 0px"}}>
-                {selectedRunInfo}
+                {"Hello"}
                 </div>
             </MuiThemeProvider></div>
 
         )
     }
 
-
-
-
     handleChange = (event, index, value) => this.props.changeDropdownValue(value);
 
-}       
+
+    
+
+  ParseObject(obj, key, value) {
+    
+            var returnArray = [];
+    
+            obj.forEach(function(elem) {
+                if(elem[key] === value) {
+                    returnArray.push(elem)
+    
+                }
+            });
+    
+            return returnArray;  
+  }
+
+}  
 
 
 

@@ -9,6 +9,7 @@ import {
 } from '../serverapi/loaddbapi'
 import AllRunsInfoCmp from '../my_modules/AllRunsInfoCmp'
 import DbStatusInfoCmp from "../my_modules/DbStatusInfoCmp"
+import RunPageInfoCmp from "../my_modules/RunPageInfoCmp"
 
 
 import './LoadTestInfoApp.css';
@@ -19,19 +20,25 @@ class LoadTestInfoApp extends Component {
     super(props); 
 
     this.getAllTestRunsInfo = this.getAllTestRunsInfo.bind(this); 
+    this.getRunPagesInfo = this.getRunPagesInfo.bind(this); 
     this.testDbConnectionInfo = this.testDbConnectionInfo.bind(this); 
     this.setselectedRun = this.setselectedRun.bind(this);
-
+    this.setselectedPage = this.setselectedPage.bind(this);
+    this.setselectedTest = this.setselectedTest.bind(this);
     this.updateObject = this.updateObject.bind(this);
 
     this.state = {
                   databaseStatus:false,
                   allRunsInfo:[], 
                   runPagesInfo:[],
+                  selectedRunId:"N/A",
                   selectedRun:0,
+                  selectedPage:0,
+                  selectedTest:0,
                   componentWaiting:{
                     "DbStatusInfoCmp":false,
-                    "AllRunsInfoCmp":false
+                    "AllRunsInfoCmp":false,
+                    "RunPageInfoCmp":false
                   }
                 }; 
   }
@@ -51,9 +58,18 @@ class LoadTestInfoApp extends Component {
         <AllRunsInfoCmp
             runsInfo = {this.state.allRunsInfo}
             isWaiting = {this.state.componentWaiting["AllRunsInfoCmp"]}
-            runsInfoFunction = {this.getAllTestRunsInfo}
+            infoFunction = {this.getAllTestRunsInfo}
             changeDropdownValue = {this.setselectedRun}
             menuValue = {this.state.selectedRun}
+        />
+        </div>
+        <div style={{"margin":"10px 00px 10px 0px"}}>
+        <RunPageInfoCmp
+            pagesInfo = {this.state.runPagesInfo}
+            isWaiting = {this.state.componentWaiting["RunPageInfoCmp"]}
+            infoFunction = {this.getRunPagesInfo}
+            changeDropdownValue = {this.setselectedPage}
+            menuValue = {this.state.selectedPage}
         />
         </div>
       </div>
@@ -77,7 +93,10 @@ class LoadTestInfoApp extends Component {
     this.setState({componentWaiting:this.updateObject(this.state.componentWaiting, "AllRunsInfoCmp", true)})
     getAllTestRuns().then(response => {
                             if(response.success === "true") { 
-                              this.setState({allRunsInfo:response.data}); 
+                              this.setState({
+                                allRunsInfo:response.data,
+                                selectedRunId:response.data[this.state.selectedRun].runID
+                              }); 
                             }
                             this.setState({componentWaiting:this.updateObject(this.state.componentWaiting, "AllRunsInfoCmp", false)})
     })
@@ -85,13 +104,13 @@ class LoadTestInfoApp extends Component {
   }  
 
   
-  getRunPagesInfo = function(runId) {
-    this.setState({componentWaiting:this.updateObject(this.state.componentWaiting, "AllRunsInfoCmp", true)})
-    getPageResults(runId).then(response => {
+  getRunPagesInfo = function() {
+    this.setState({componentWaiting:this.updateObject(this.state.componentWaiting, "RunPageInfoCmp", true)})
+    getPageResults(this.state.selectedRunId).then(response => {
                             if(response.success === "true") { 
-                              this.setState({allRunsInfo:response.data}); 
+                              this.setState({runPagesInfo:response.data}); 
                             }
-                            this.setState({componentWaiting:this.updateObject(this.state.componentWaiting, "AllRunsInfoCmp", false)})
+                            this.setState({componentWaiting:this.updateObject(this.state.componentWaiting, "RunPageInfoCmp", false)})
     })
     .catch(error => alert("Error: " + error.message + "\n" + error.stack))
   }  
@@ -100,8 +119,16 @@ class LoadTestInfoApp extends Component {
 
 
 
-  setselectedRun = function(runIndex) {
-    this.setState({selectedRun:runIndex})
+  setselectedRun = function(runIndex, runId) {
+    this.setState({selectedRun:runIndex, selectedRunId:runId})
+
+  }
+  setselectedPage = function(pageIndex) {
+    this.setState({selectedPage:pageIndex})
+
+  }
+  setselectedTest = function(testIndex) {
+    this.setState({selectedTest:testIndex})
 
   }
 
@@ -117,6 +144,7 @@ class LoadTestInfoApp extends Component {
     obj[key] = value;
     return obj;
   }
+
 
 
 
