@@ -29,12 +29,6 @@ class AllRunsInfoCmp extends Component {
                                 <div>{"Outcome: "  + this.props.runsInfo[this.props.menuValue].outcome} </div>
                                 <div>{"End time: "  + this.props.runsInfo[this.props.menuValue].endTime} </div></div>
                                 
-                                
-            
-
-
-                                
-
         }
 
         if(this.props.isWaiting) {

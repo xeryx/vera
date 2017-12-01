@@ -23,8 +23,6 @@ class LoadTestInfoApp extends Component {
     this.getRunPagesInfo = this.getRunPagesInfo.bind(this); 
     this.testDbConnectionInfo = this.testDbConnectionInfo.bind(this); 
     this.setselectedRun = this.setselectedRun.bind(this);
-    this.setselectedPage = this.setselectedPage.bind(this);
-    this.setselectedTest = this.setselectedTest.bind(this);
     this.updateObject = this.updateObject.bind(this);
 
     this.state = {
@@ -33,7 +31,6 @@ class LoadTestInfoApp extends Component {
                   runPagesInfo:[],
                   selectedRunId:"N/A",
                   selectedRun:0,
-                  selectedPage:0,
                   selectedTest:0,
                   componentWaiting:{
                     "DbStatusInfoCmp":false,
@@ -68,8 +65,6 @@ class LoadTestInfoApp extends Component {
             pagesInfo = {this.state.runPagesInfo}
             isWaiting = {this.state.componentWaiting["RunPageInfoCmp"]}
             infoFunction = {this.getRunPagesInfo}
-            changeDropdownValue = {this.setselectedPage}
-            menuValue = {this.state.selectedPage}
         />
         </div>
       </div>
@@ -123,14 +118,7 @@ class LoadTestInfoApp extends Component {
     this.setState({selectedRun:runIndex, selectedRunId:runId})
 
   }
-  setselectedPage = function(pageIndex) {
-    this.setState({selectedPage:pageIndex})
 
-  }
-  setselectedTest = function(testIndex) {
-    this.setState({selectedTest:testIndex})
-
-  }
 
   componentDidMount() {
     this.testDbConnectionInfo();
