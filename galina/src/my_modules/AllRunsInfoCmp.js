@@ -18,16 +18,21 @@ class AllRunsInfoCmp extends Component {
 
 
         if(this.props.runsInfo.length === 0) {
-            runItems.push(<MenuItem value={0} primaryText={"None"} />)
+            runItems.push(<MenuItem key={0} value={0} primaryText={"None"} />)
         }
         else {
             for (let i = 0; i < this.props.runsInfo.length; i++ ) {
-                runItems.push(<MenuItem value={i} primaryText={this.props.runsInfo[i].startTime} />);
+                runItems.push(<MenuItem value={i} primaryText={this.props.runsInfo[i].startTime}  key={i} />);
             }
-            selectedRunInfo =  <div> <div>{"Users: " + this.props.runsInfo[this.props.menuValue].users} </div>
-                                <div>{"Duration: " + this.props.runsInfo[this.props.menuValue].runDuration + " ms"} </div>
-                                <div>{"Outcome: "  + this.props.runsInfo[this.props.menuValue].outcome} </div>
-                                <div>{"End time: "  + this.props.runsInfo[this.props.menuValue].endTime} </div></div>
+
+            var selectedObj = this.props.runsInfo[this.props.menuValue];
+
+            var selectedRunInfoTable = <table><tbody>
+                    <tr><td>Users</td><td className="tdh">{selectedObj.users}</td></tr>
+                    <tr><td>Duration</td><td className="tdh">{selectedObj.runDuration}</td></tr>
+                    <tr><td>Outcome</td><td className="tdh">{selectedObj.outcome}</td></tr>
+                    <tr><td>End Time</td><td className="tdh">{selectedObj.endTime}</td></tr>
+                    </tbody></table>
                                 
         }
 
@@ -38,7 +43,8 @@ class AllRunsInfoCmp extends Component {
  
         return(
 
-            <div><MuiThemeProvider muiTheme={getMuiTheme(myTheme)}>
+            <MuiThemeProvider muiTheme={getMuiTheme(myTheme)}>
+            <div>
                 <RaisedButton 
                     label="Load Test Runs" 
                     primary={true} 
@@ -53,9 +59,9 @@ class AllRunsInfoCmp extends Component {
                 </DropDownMenu>
                 {waitingCircle}
                 <div style={{"margin":"10px 0px 0px 0px"}}>
-                {selectedRunInfo}
+                {selectedRunInfoTable}
                 </div>
-            </MuiThemeProvider></div>
+                </div></MuiThemeProvider>
 
         )
     }

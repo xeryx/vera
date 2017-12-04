@@ -70,3 +70,8 @@ export function testDbConnection() {
         .then(requestId => getRequestResponseContent(requestId))
     );
 };
+
+
+
+//getGraphData/2917/LOADMASTERCB.PERFTESTMV.LOCAL/%25%20Processor%20Time/Processor/
+//getGraphData/2917/LOADMASTERCB.PERFTESTMV.LOCAL/Available%20MBytes/Memory/
