@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import LoadTestInfo from './apps/LoadTestInfoApp';
+import LoadTestInfoApp from './apps/LoadTestInfoApp';
 
 ReactDOM.render(
                 <div>
@@ -10,6 +10,6 @@ ReactDOM.render(
                     <img alt="" src="./res/synapse5_logo.svg" style={{"width":"240px", "float":"right"}}/>                
                     <div style={{"clear":"both"}}></div>
                 </div>
-                <LoadTestInfo/>   
+                <LoadTestInfoApp/>   
     </div>, document.getElementById('root'));
 

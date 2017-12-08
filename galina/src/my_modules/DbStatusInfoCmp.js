@@ -1,17 +1,20 @@
 import React, { Component } from 'react';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import myTheme from '../themes/myTheme';
 import CircularProgress from 'material-ui/CircularProgress';
 
 
+const compName = "DbStatusInfoCmp";
 
 class DbStatusInfoCmp extends Component {
     
+    constructor(props) {
+        super(props); 
+        this.componentDidMount = this.componentDidMount.bind(this); 
+    }
+
     render() {  
 
-        var color = "red";
-        var content = "offline"
+        let color = "red";
+        let content = "offline"
 
         if(this.props.isDbOnline) {
             color = "green";
@@ -24,15 +27,18 @@ class DbStatusInfoCmp extends Component {
 
         return(
 
-            <div><MuiThemeProvider muiTheme={getMuiTheme(myTheme)}>
-
             <div>
                 <span>DB connection status:</span> <span style={{"color":color, "padding":"10px"}}>{content}</span> 
+                <button style={{background:"transparent", border: "none", outline:"none", height:20, width:50}} onClick={this.componentDidMount}></button>
+
             </div>
-
-            </MuiThemeProvider></div>
-
         )
+    }
+
+    componentDidMount() {
+        this.props.callback(compName,"updateDbState",{})
+
+
     }
 
 }          
