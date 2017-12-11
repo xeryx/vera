@@ -6,12 +6,25 @@ body {
     color:white
 }
 
-.tdh {
-    padding: 0px 0px 0px 20px;
+.row-data-2 {
+    padding: 3px 10px 3px 5px;
     color:rgb(167, 180, 130);
+    font-size: 16px;
 }
 
-.tdg {
-    padding: 0px 0px 0px 20px;
-    font-size: 15px
+.row-data-1 {
+    padding: 3px 10px 3px 5px;
+    color:white;
+    font-size: 16px;
+}
+
+.header-1 {
+    padding: 10px 10px 10px 5px;
+    font-size: 17px;
+    color:rgb(150, 108, 35);
+
+}
+tr,td {
+    border: 1px solid black;
+    
 }

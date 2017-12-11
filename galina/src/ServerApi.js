@@ -59,6 +59,16 @@ export function getPageResults(runId) {
     );
 };
 
+export function getTestCaseResults(runId) {
+    return(
+        fetch('/loaddb/getTestCaseResults/' + runId, {
+            method: "get",
+        })
+        .then(response => response.json())
+        .then(requestId => getRequestResponseContent(requestId))
+    );
+};
+
 export function getSystemUnderTestResources(runId) {
     return(
         fetch('/loaddb/getSystemUnderTestResources/' + runId, {
@@ -110,3 +120,13 @@ export function getGraphData(runId, machine, category, counter) {
     );
 };
 
+export function getRunInfo(command,runId) {
+    return(
+        fetch('/loaddb/' + command + '/' + runId, {
+            method: "get",
+        })
+        .then(response => response.json())
+        .then(requestId => getRequestResponseContent(requestId))
+
+    );
+};

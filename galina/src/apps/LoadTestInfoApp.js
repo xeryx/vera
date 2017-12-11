@@ -7,14 +7,15 @@ import {
   testDbConnection,
   getAllTestRuns,
   getGraphData,
-  getPageResults
+  getPageResults,
+  getTestCaseResults,
+  getMachinesInvolved
 } from '../ServerApi'
 import AllRunsInfoCmp from '../my_modules/AllRunsInfoCmp'
 import DbStatusInfoCmp from "../my_modules/DbStatusInfoCmp"
-import DataPlotCmp from "../my_modules/DataPlotCmp"
-import RunPagesInfoCmp from "../my_modules/RunPagesInfoCmp"
-
-
+import RunMachinesDataCmp from "../my_modules/RunMachinesDataCmp"
+import RunTestCasesInfoCmp from "../my_modules/RunTestCasesInfoCmp"
+//import RawJsonCmp from "../my_modules/RawJsonCmp"
 
 class LoadTestInfoApp extends Component {
 
@@ -27,26 +28,23 @@ class LoadTestInfoApp extends Component {
     this.state = {
                   databaseStatus:false,
                   allRunsInfo:[], 
+                  currentRunPageInfo:[],
+                  currentRunTestCaseInfo:[],
+                  currentRunMachineInfo:[],
+
+                  currentRunPlotData:{},
 
                   selectedRunId:"",
                   selectedRun:0,
-                  selectedGraph:0,
-
-                  currentRunPageInfo:[],
-
-                  currentRunPlotData:{},
-                  currentMachine:"LOADMASTERCB.PERFTESTMV.LOCAL", 
-                  currentCounterCategory:"Processor",
-                  currentCounter:"%25%20Processor%20Time",
+                  selectedMachine:0,
 
                   componentWaiting:{
                     "DbStatusInfoCmp":false,
                     "AllRunsInfoCmp":false,
-                    "DataPlotCmp":false,
-                    "RunPagesInfoCmp":false
+                    "RunMachinesDataCmp":false,
+                    "RunPagesInfoCmp":false,
+                    "RunTestCasesInfoCmp":false,                    
                   },
-
-
                 };
   }
 
@@ -65,18 +63,22 @@ class LoadTestInfoApp extends Component {
                             menuValue = {this.state.selectedRun}
                           />    
     
-    let  runPagesInfoCmp = <RunPagesInfoCmp
-                            pagesInfo = {this.state.currentRunPageInfo}
-                            isWaiting = {this.state.componentWaiting["RunPagesInfoCmp"]}
+    let  runTestCasesInfoCmp = <RunTestCasesInfoCmp
+                            testCasesInfo = {this.state.currentRunTestCaseInfo}
+                            isWaiting = {this.state.componentWaiting["RunTestCasesInfoCmp"]}
                             callback = {this.childrenCallback}
                           />    
 
-    let runGraph = <DataPlotCmp
-                        plotData = {this.state.currentRunPlotData}
-                        isWaiting = {this.state.componentWaiting["DataPlotCmp"]}
+    let runMachineData = <RunMachinesDataCmp
+                        machineInfo = {this.state.currentRunMachineInfo}
+                        isWaiting = {this.state.componentWaiting["RunMachinesDataCmp"]}
                         callback = {this.childrenCallback}
-                        menuValue = {this.state.selectedGraph}
+                        menuValue = {this.state.selectedMachine}
+                        plotData = {this.state.currentRunPlotData}
+                        
                         /> 
+
+   // let rawJson = <RawJsonCmp/>                         
 
     return(
       <MuiThemeProvider muiTheme={getMuiTheme(myTheme)}><div>
@@ -87,10 +89,10 @@ class LoadTestInfoApp extends Component {
             {allRunsInfoCmp}
         </div>
         <div style={{margin:"10px 00px 10px 0px"}}>
-          {runPagesInfoCmp}
+          {runTestCasesInfoCmp}
         </div>
         <div style={{margin:"35px 00px 10px 0px"}}>
-          {runGraph}
+          {runMachineData}
         </div>        
       </div></MuiThemeProvider>
     )
@@ -100,6 +102,26 @@ class LoadTestInfoApp extends Component {
   childrenCallback = function(childrenCmp, message, data) {
 
     switch(message) {
+      
+      default:
+      break;
+
+      case "runMenuChange":
+      this.setState({
+        selectedRun:data,
+        selectedRunId:this.state.allRunsInfo[data].runID,
+        currentRunPlotData:{},
+        currentRunTestCaseInfo:[],
+        currentRunMachineInfo:[],
+        selectedMachine:0,
+      }); 
+      break;
+      case "machineMenuChange":
+      this.setState({
+        selectedMachine:data,
+      }); 
+      break;
+
       case "updateDbState":
         this.changeWaitingState(childrenCmp, true);
         this.testDbConnectionInfo()
@@ -112,27 +134,31 @@ class LoadTestInfoApp extends Component {
         .then(response => this.changeWaitingState(childrenCmp, false))
         break;
 
-      case "runMenuChange":
-        this.setState({
-          selectedRun:data,
-          selectedRunId:this.state.allRunsInfo[data].runID,
-          currentRunPlotData:{},
-          currentRunPageInfo:[],
-
-        }); 
-        break;
-
         case "updateRunPagesInfo":
         this.changeWaitingState(childrenCmp, true);
         this.getRunPagesInfo()
         .then(response => this.changeWaitingState(childrenCmp, false))
         break;
 
-      case "updateRunPlotInfo":
+        case "updateRunTestCasesInfo":
         this.changeWaitingState(childrenCmp, true);
-        this.getCurrentRunPlotInfo()
+        this.getRunTestCasesInfo()
         .then(response => this.changeWaitingState(childrenCmp, false))
         break;
+
+      case "updateRunMachineInfo":
+        this.changeWaitingState(childrenCmp, true);
+        this.getRunMachineInfo()
+        .then(response => this.changeWaitingState(childrenCmp, false))
+        break;
+
+        case "updateMachinePlotInfo":
+        this.changeWaitingState(childrenCmp, true);
+        this.getCurrentRunMachinePlotInfo()
+        .then(response => this.changeWaitingState(childrenCmp, false))
+        break;
+
+        
 
     }
   }
@@ -187,25 +213,65 @@ class LoadTestInfoApp extends Component {
     .catch(error => alert("Error: " + error.message + "\n" + error.stack))
     )
   }  
-  getCurrentRunPlotInfo = function() {
+
+  getRunTestCasesInfo = function() {
     return(
-      getGraphData(this.state.selectedRunId, this.state.currentMachine, this.state.currentCounterCategory, this.state.currentCounter)
+      getTestCaseResults(this.state.selectedRunId)
       .then(response => {
                           if(response.success === "true") { 
-                            let tempPlotData = {
-                              x:response.data[0],
-                              y:response.data[1],
-                              title:"Processor (% Processor Time)",
-                              xtitle:"time (mins)",
-                              ytitle:"% CPU",
-                            }
-                            this.setState({currentRunPlotData:tempPlotData}); 
+                            this.setState({
+                              currentRunTestCaseInfo:response.data
+                            }); 
                           }
                         })
     .catch(error => alert("Error: " + error.message + "\n" + error.stack))
     )
-  }      
+  }  
+  
+  getRunMachineInfo = function() {
+    return(
+      getMachinesInvolved(this.state.selectedRunId)
+      .then(response => {
+                          if(response.success === "true") {
+                            response.data.push(response.data.shift());
+                            this.setState({
+                              currentRunMachineInfo:response.data
+                            }); 
+                          }
+                        })
+    .catch(error => alert("Error: " + error.message + "\n" + error.stack))
+    )
+  }  
 
+  getCurrentRunMachinePlotInfo = function() {
+    let promise1 = getGraphData(this.state.selectedRunId, 
+                                this.state.currentRunMachineInfo[this.state.selectedMachine], 
+                                "Processor", 
+                                "%25%20Processor%20Time");
+    let promise2 = getGraphData(this.state.selectedRunId, 
+                                this.state.currentRunMachineInfo[this.state.selectedMachine], 
+                                "Memory", 
+                                "Available MBytes");
+    return(Promise.all([promise1, promise2])
+          .then(responses => {
+            if((responses[0].success === "true")&&(responses[1].success === "true")) { 
+              let tempPlotData = {
+                x:responses[0].data[0],
+                y1:responses[0].data[1],
+                y2:responses[1].data[1],
+                title:this.state.currentRunMachineInfo[this.state.selectedMachine],
+                xtitle:"time (mins)",
+                y1title:"% CPU",
+                y2title:"Available Memory",
+                y1DataName:"CPU",
+                y2DataName:"Memory",
+              }
+              this.setState({currentRunPlotData:tempPlotData});
+            }
+        })
+    .catch(error => alert("Error: " + error.message + "\n" + error.stack))
+    )
+  }  
 
 ///////////////////////////////////////////////////////////
 //Internal function to update state object for waiting state

@@ -1,10 +1,6 @@
 import React, { Component } from 'react';
 import CircularProgress from 'material-ui/CircularProgress';
 
-
-
-const compName = "ReqsPerSecCmp";
-
 class ReqsPerSecCmp extends Component {
     
     render() {  
@@ -18,7 +14,7 @@ class ReqsPerSecCmp extends Component {
         }
 
         return(
-            <tr><td>Requests/sec</td><td className="tdh">{content}</td></tr>
+            <tr><td className="row-data-1">Requests/sec</td><td className="row-data-2">{content}</td></tr>
         )
     }
 

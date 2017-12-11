@@ -13,7 +13,7 @@ class AllRunsInfoCmp extends Component {
         super(props); 
         
         this.state = {componentWaiting:{
-                        "DbStatusInfoCmp":false,
+                        "ReqsPerSecCmp":false,
                     },
         }
     }
@@ -23,7 +23,6 @@ class AllRunsInfoCmp extends Component {
 
         let runItems = [];
         let waitingCircle = "" ;
-        let selectedRunInfo = "";
         let selectedRunGeneralInfoTable = "";      
         let menuDisabled = false;
         let selectedObj = {};
@@ -49,10 +48,11 @@ class AllRunsInfoCmp extends Component {
         }
 
         selectedRunGeneralInfoTable = <table><tbody>
-        <tr><td>Users</td><td className="tdh">{selectedObj.users}</td></tr>
-        <tr><td>Duration (mins)</td><td className="tdh">{durationMins}</td></tr>
-        <tr><td>Start Time</td><td className="tdh">{selectedObj.startTime}</td></tr>
-        <tr><td>End Time</td><td className="tdh">{selectedObj.endTime}</td></tr>
+        <tr><td className="row-data-1">Users</td><td className="row-data-2">{selectedObj.users}</td></tr>
+        <tr><td className="row-data-1">Duration (mins)</td><td className="row-data-2">{durationMins}</td></tr>
+        <tr><td className="row-data-1">Start Time</td><td className="row-data-2">{selectedObj.startTime}</td></tr>
+        <tr><td className="row-data-1">End Time</td><td className="row-data-2">{selectedObj.endTime}</td></tr>
+        <tr><td className="row-data-1">ID</td><td className="row-data-2">{selectedObj.runID}</td></tr>
         <ReqsPerSecCmp 
             runReqsPerSec = "N/A"
             isWaiting = {this.state.componentWaiting["ReqsPerSecCmp"]}
