@@ -58,6 +58,8 @@ class RunMachinesDataCmp extends Component {
       };
       let data = [trace1, trace2];
       let layout = {
+        paper_bgcolor:'#bfbfbf',
+        plot_bgcolor:'#bfbfbf',
         title: this.props.plotData.title,
         xaxis: {title: this.props.plotData.xtitle},
         yaxis: {title: this.props.plotData.y1title},

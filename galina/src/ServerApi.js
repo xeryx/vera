@@ -49,9 +49,9 @@ export function getOverallResults(runId) {
     );
 };
 
-export function getPageResults(runId) {
+export function getPageResultsByTestCase(runId, testCaseName) {
     return(
-        fetch('/loaddb/getPageResults/' + runId, {
+        fetch('/loaddb/getPageResultsByTestCase/' + runId + '/' + testCaseName, {
             method: "get",
         })
         .then(response => response.json())

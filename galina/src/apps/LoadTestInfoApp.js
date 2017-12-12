@@ -7,7 +7,7 @@ import {
   testDbConnection,
   getAllTestRuns,
   getGraphData,
-  getPageResults,
+  getPageResultsByTestCase,
   getTestCaseResults,
   getMachinesInvolved
 } from '../ServerApi'
@@ -15,6 +15,7 @@ import AllRunsInfoCmp from '../my_modules/AllRunsInfoCmp'
 import DbStatusInfoCmp from "../my_modules/DbStatusInfoCmp"
 import RunMachinesDataCmp from "../my_modules/RunMachinesDataCmp"
 import RunTestCasesInfoCmp from "../my_modules/RunTestCasesInfoCmp"
+import TestCasePagesInfoCmp from "../my_modules/TestCasePagesInfoCmp"
 //import RawJsonCmp from "../my_modules/RawJsonCmp"
 
 class LoadTestInfoApp extends Component {
@@ -38,11 +39,15 @@ class LoadTestInfoApp extends Component {
                   selectedRun:0,
                   selectedMachine:0,
 
+                  testCasePagesOpen:false,
+                  selectedTestCase:"",
+                  currentRunSelectedTestCasePagesInfo:[],
+
                   componentWaiting:{
                     "DbStatusInfoCmp":false,
                     "AllRunsInfoCmp":false,
                     "RunMachinesDataCmp":false,
-                    "RunPagesInfoCmp":false,
+                    "TestCasePagesInfoCmp":false,
                     "RunTestCasesInfoCmp":false,                    
                   },
                 };
@@ -75,13 +80,22 @@ class LoadTestInfoApp extends Component {
                         callback = {this.childrenCallback}
                         menuValue = {this.state.selectedMachine}
                         plotData = {this.state.currentRunPlotData}
-                        
                         /> 
+    let testCasePageData = <TestCasePagesInfoCmp
+                      isOpen = {this.state.testCasePagesOpen}
+                      callback = {this.childrenCallback}
+                      pagesInfo = {this.state.currentRunSelectedTestCasePagesInfo}
+                      testCaseName = {this.state.selectedTestCase}
+                      isWaiting = {this.state.componentWaiting["TestCasePagesInfoCmp"]}
+                      /> 
 
-   // let rawJson = <RawJsonCmp/>                         
+
+   // let rawJson = <RawJsonCmp/>    
+                        
 
     return(
       <MuiThemeProvider muiTheme={getMuiTheme(myTheme)}><div>
+        
         <div style={{margin:"20px 0px 10px 0px"}}>
           {dbStatusCmp}
         </div>
@@ -94,6 +108,10 @@ class LoadTestInfoApp extends Component {
         <div style={{margin:"35px 00px 10px 0px"}}>
           {runMachineData}
         </div>        
+        
+        <div style={{margin:"20px 0px 10px 0px"}}>
+          {testCasePageData}
+        </div>     
       </div></MuiThemeProvider>
     )
     
@@ -134,16 +152,22 @@ class LoadTestInfoApp extends Component {
         .then(response => this.changeWaitingState(childrenCmp, false))
         break;
 
-        case "updateRunPagesInfo":
-        this.changeWaitingState(childrenCmp, true);
-        this.getRunPagesInfo()
-        .then(response => this.changeWaitingState(childrenCmp, false))
-        break;
-
-        case "updateRunTestCasesInfo":
+      case "updateRunTestCasesInfo":
         this.changeWaitingState(childrenCmp, true);
         this.getRunTestCasesInfo()
         .then(response => this.changeWaitingState(childrenCmp, false))
+        break;
+        
+      case "openTestCasePagesDialog":
+        this.changeWaitingState("TestCasePagesInfoCmp", true);
+        this.setState({testCasePagesOpen:true, selectedTestCase:data})
+        this.setState({currentRunSelectedTestCasePagesInfo:[]})
+        this.getTestCasePageResults(data)  
+        .then(response => this.changeWaitingState("TestCasePagesInfoCmp", false))
+        break;
+
+      case "closeTestCasePagesDialog":
+        this.closeTestCaseDialog()
         break;
 
       case "updateRunMachineInfo":
@@ -157,6 +181,7 @@ class LoadTestInfoApp extends Component {
         this.getCurrentRunMachinePlotInfo()
         .then(response => this.changeWaitingState(childrenCmp, false))
         break;
+
 
         
 
@@ -199,20 +224,6 @@ class LoadTestInfoApp extends Component {
     .catch(error => alert("Error: " + error.message + "\n" + error.stack))
     )
   }
-
-  getRunPagesInfo = function() {
-    return(
-      getPageResults(this.state.selectedRunId)
-      .then(response => {
-                          if(response.success === "true") { 
-                            this.setState({
-                              currentRunPageInfo:response.data
-                            }); 
-                          }
-                        })
-    .catch(error => alert("Error: " + error.message + "\n" + error.stack))
-    )
-  }  
 
   getRunTestCasesInfo = function() {
     return(
@@ -271,7 +282,26 @@ class LoadTestInfoApp extends Component {
         })
     .catch(error => alert("Error: " + error.message + "\n" + error.stack))
     )
-  }  
+  }
+  
+  getTestCasePageResults = function(testCaseName) {
+    return(
+      getPageResultsByTestCase(this.state.selectedRunId, testCaseName)
+      .then(response => {
+                          if(response.success === "true") { 
+                            this.setState({
+                              currentRunSelectedTestCasePagesInfo:response.data
+                            }); 
+                          }
+                        })
+    .catch(error => alert("Error: " + error.message + "\n" + error.stack))
+    )
+  }   
+
+  closeTestCaseDialog = function(testCaseName) {
+    this.setState({testCasePagesOpen:false})
+  }
+
 
 ///////////////////////////////////////////////////////////
 //Internal function to update state object for waiting state
@@ -283,6 +313,7 @@ class LoadTestInfoApp extends Component {
     obj[key] = value;
     return obj;
   }
+ 
 
 }
 

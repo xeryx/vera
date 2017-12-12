@@ -27,10 +27,10 @@ class DbStatusInfoCmp extends Component {
 
         return(
 
-            <div>
-                <span>DB connection status:</span> <span style={{"color":color, "padding":"10px"}}>{content}</span> 
+            <div style={{float:"right", fontSize:"16px"}}>
                 <button style={{background:"transparent", border: "none", outline:"none", height:20, width:50}} onClick={this.componentDidMount}></button>
-
+                <span>DB connection status:</span>
+                <span style={{color:color, padding:"10px"}}>{content}</span> 
             </div>
         )
     }

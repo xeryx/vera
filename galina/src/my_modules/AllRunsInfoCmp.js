@@ -90,7 +90,7 @@ class AllRunsInfoCmp extends Component {
                     {runItems}
                     </DropDownMenu>
                 </div>
-                <div style={{float:"left"}}>
+                <div style={{float:"left", padding:"10px 0px 0px 0px"}}>
                     {selectedRunGeneralInfoTable}
                 </div>
                 {waitingCircle}
