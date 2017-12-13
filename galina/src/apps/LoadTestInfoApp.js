@@ -266,6 +266,7 @@ class LoadTestInfoApp extends Component {
     return(Promise.all([promise1, promise2])
           .then(responses => {
             if((responses[0].success === "true")&&(responses[1].success === "true")) { 
+              responses[1].data[1] = responses[1].data[1].map(x => x / 1024)
               let tempPlotData = {
                 x:responses[0].data[0],
                 y1:responses[0].data[1],
