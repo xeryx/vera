@@ -4,318 +4,339 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import myTheme from '../themes/myTheme';
 import {
-  testDbConnection,
-  getAllTestRuns,
-  getGraphData,
-  getPageResultsByTestCase,
-  getTestCaseResults,
-  getMachinesInvolved
+   testDbConnection,
+   getAllTestRuns,
+   getGraphData,
+   getPageResultsByTestCase,
+   getTestCaseResults,
+   getMachinesInvolved
 } from '../ServerApi'
 import AllRunsInfoCmp from '../my_modules/AllRunsInfoCmp'
 import DbStatusInfoCmp from "../my_modules/DbStatusInfoCmp"
-import RunMachinesDataCmp from "../my_modules/RunMachinesDataCmp"
 import RunTestCasesInfoCmp from "../my_modules/RunTestCasesInfoCmp"
 import TestCasePagesInfoCmp from "../my_modules/TestCasePagesInfoCmp"
-//import RawJsonCmp from "../my_modules/RawJsonCmp"
+import MachinesInfoCmp from "../my_modules/MachinesInfoCmp"
+import MachinePlotCmp from "../my_modules/MachinePlotCmp"
 
 class LoadTestInfoApp extends Component {
 
-  constructor(props) {
-    super(props); 
+   constructor(props) {
+      super(props);
 
-    this.changeWaitingState = this.changeWaitingState.bind(this); 
-    this.childrenCallback = this.childrenCallback.bind(this); 
-    
-    this.state = {
-                  databaseStatus:false,
-                  allRunsInfo:[], 
-                  currentRunPageInfo:[],
-                  currentRunTestCaseInfo:[],
-                  currentRunMachineInfo:[],
+      this.childrenCallback = this.childrenCallback.bind(this);
 
-                  currentRunPlotData:{},
+      this.state = {
+         isDbOnline: false,
+         allRunsInfo: [],
+         selectedRunTestCaseInfo: [],
+         selectedTestCase: "",
+         selectedTestCasePageInfo: [],
+         selectedRunMachineInfo: [],
+         selectedMachine: "",
+         selectedMachinePlotData: {},
+         
+         selectedRunId: "",
+         selectedRunIndex: 0,
 
-                  selectedRunId:"",
-                  selectedRun:0,
-                  selectedMachine:0,
+         testCasePagesDialogOpen: false,
+         machinePlotDialogOpen: false,
 
-                  testCasePagesOpen:false,
-                  selectedTestCase:"",
-                  currentRunSelectedTestCasePagesInfo:[],
+         componentWaiting: {
+            "DbStatusInfoCmp": false,
+            "AllRunsInfoCmp": false,
+            "MachinesInfoCmp": false,
+            "TestCasePagesInfoCmp": false,
+            "RunTestCasesInfoCmp": false,
+            "MachinePlotCmp": false,
+         },
+      };
+   }
 
-                  componentWaiting:{
-                    "DbStatusInfoCmp":false,
-                    "AllRunsInfoCmp":false,
-                    "RunMachinesDataCmp":false,
-                    "TestCasePagesInfoCmp":false,
-                    "RunTestCasesInfoCmp":false,                    
-                  },
-                };
-  }
+   render() {
 
-  render() {  
+      let dbStatusCmp = <DbStatusInfoCmp
+         isDbOnline={this.state.isDbOnline}
+         isWaiting={this.state.componentWaiting["DbStatusInfoCmp"]}
+         callback={this.childrenCallback}
+      />
 
-    let dbStatusCmp = <DbStatusInfoCmp 
-                        isDbOnline = {this.state.databaseStatus}
-                        isWaiting = {this.state.componentWaiting["DbStatusInfoCmp"]}
-                        callback = {this.childrenCallback}
-                      />
+      let allRunsInfoCmp = <AllRunsInfoCmp
+         isDbOnline={this.state.isDbOnline}
+         runsInfo={this.state.allRunsInfo}
+         isWaiting={this.state.componentWaiting["AllRunsInfoCmp"]}
+         callback={this.childrenCallback}
+         menuValue={this.state.selectedRunIndex}
+      />
 
-    let  allRunsInfoCmp = <AllRunsInfoCmp
-                            runsInfo = {this.state.allRunsInfo}
-                            isWaiting = {this.state.componentWaiting["AllRunsInfoCmp"]}
-                            callback = {this.childrenCallback}
-                            menuValue = {this.state.selectedRun}
-                          />    
-    
-    let  runTestCasesInfoCmp = <RunTestCasesInfoCmp
-                            testCasesInfo = {this.state.currentRunTestCaseInfo}
-                            isWaiting = {this.state.componentWaiting["RunTestCasesInfoCmp"]}
-                            callback = {this.childrenCallback}
-                          />    
+      let runTestCasesInfo = <RunTestCasesInfoCmp
+         testCasesInfo={this.state.selectedRunTestCaseInfo}
+         isWaiting={this.state.componentWaiting["RunTestCasesInfoCmp"]}
+         runId={this.state.selectedRunId}
+         callback={this.childrenCallback}
+      />
 
-    let runMachineData = <RunMachinesDataCmp
-                        machineInfo = {this.state.currentRunMachineInfo}
-                        isWaiting = {this.state.componentWaiting["RunMachinesDataCmp"]}
-                        callback = {this.childrenCallback}
-                        menuValue = {this.state.selectedMachine}
-                        plotData = {this.state.currentRunPlotData}
-                        /> 
-    let testCasePageData = <TestCasePagesInfoCmp
-                      isOpen = {this.state.testCasePagesOpen}
-                      callback = {this.childrenCallback}
-                      pagesInfo = {this.state.currentRunSelectedTestCasePagesInfo}
-                      testCaseName = {this.state.selectedTestCase}
-                      isWaiting = {this.state.componentWaiting["TestCasePagesInfoCmp"]}
-                      /> 
+      let testCasePageDialog = <TestCasePagesInfoCmp
+         isOpen={this.state.testCasePagesDialogOpen}
+         callback={this.childrenCallback}
+         pagesInfo={this.state.selectedTestCasePageInfo}
+         testCaseName={this.state.selectedTestCase}
+         isWaiting={this.state.componentWaiting["TestCasePagesInfoCmp"]}
+      />
 
+      let runMachinesInfo = <MachinesInfoCmp
+         machineInfo={this.state.selectedRunMachineInfo}
+         isWaiting={this.state.componentWaiting["MachinesInfoCmp"]}
+         runId={this.state.selectedRunId}
+         callback={this.childrenCallback}
+      />
 
-   // let rawJson = <RawJsonCmp/>    
-                        
+      let machinePlotDialog = <MachinePlotCmp
+         isOpen={this.state.machinePlotDialogOpen}
+         callback={this.childrenCallback}
+         plotData={this.state.selectedMachinePlotData}
+         machineName={this.state.selectedMachine}
+         isWaiting={this.state.componentWaiting["MachinePlotCmp"]}
+      />
 
-    return(
-      <MuiThemeProvider muiTheme={getMuiTheme(myTheme)}><div>
-        
-        <div style={{margin:"20px 0px 10px 0px"}}>
-          {dbStatusCmp}
-        </div>
-        <div style={{margin:"10px 00px 10px 0px"}}>
-            {allRunsInfoCmp}
-        </div>
-        <div style={{margin:"10px 00px 10px 0px"}}>
-          {runTestCasesInfoCmp}
-        </div>
-        <div style={{margin:"35px 00px 10px 0px"}}>
-          {runMachineData}
-        </div>        
-        
-        <div style={{margin:"20px 0px 10px 0px"}}>
-          {testCasePageData}
-        </div>     
-      </div></MuiThemeProvider>
-    )
-    
-  }
+      return (
+         <MuiThemeProvider muiTheme={getMuiTheme(myTheme)}><div>
+            <div style={{ margin: "20px 0px 10px 0px" }}>
+               {dbStatusCmp}
+            </div>
+            <div style={{ margin: "10px 00px 10px 0px" }}>
+               {allRunsInfoCmp}
+            </div>
+            <div style={{ margin: "10px 00px 10px 0px" }}>
+               {runTestCasesInfo}
+            </div>
+            <div style={{ margin: "35px 00px 10px 0px" }}>
+               {runMachinesInfo}
+            </div>
+            <div style={{ margin: "20px 0px 10px 0px" }}>
+               {testCasePageDialog}
+            </div>
+            <div style={{ margin: "20px 0px 10px 0px" }}>
+               {machinePlotDialog}
+            </div>            
+         </div></MuiThemeProvider>
+      )
+   }
 
-  childrenCallback = function(childrenCmp, message, data) {
+   childrenCallback = function (command, data) {
 
-    switch(message) {
-      
-      default:
-      break;
+      switch (command) {
 
-      case "runMenuChange":
-      this.setState({
-        selectedRun:data,
-        selectedRunId:this.state.allRunsInfo[data].runID,
-        currentRunPlotData:{},
-        currentRunTestCaseInfo:[],
-        currentRunMachineInfo:[],
-        selectedMachine:0,
-      }); 
-      break;
-      case "machineMenuChange":
-      this.setState({
-        selectedMachine:data,
-      }); 
-      break;
+         default:
+            break;
 
-      case "updateDbState":
-        this.changeWaitingState(childrenCmp, true);
-        this.testDbConnectionInfo()
-        .then(response => this.changeWaitingState(childrenCmp, false))
-        break;
-      
-      case "updateAllRunsInfo":
-        this.changeWaitingState(childrenCmp, true);
-        this.getAllTestRunsInfo()
-        .then(response => this.changeWaitingState(childrenCmp, false))
-        break;
+         case "runMenuChange":
+            this.setState({
+               selectedRunIndex: data,
+               selectedRunId: this.state.allRunsInfo[data].runID,
+               selectedRunTestCaseInfo: [],
+               selectedRunMachineInfo: [],
+            });
+            break;
 
-      case "updateRunTestCasesInfo":
-        this.changeWaitingState(childrenCmp, true);
-        this.getRunTestCasesInfo()
-        .then(response => this.changeWaitingState(childrenCmp, false))
-        break;
-        
-      case "openTestCasePagesDialog":
-        this.changeWaitingState("TestCasePagesInfoCmp", true);
-        this.setState({testCasePagesOpen:true, selectedTestCase:data})
-        this.setState({currentRunSelectedTestCasePagesInfo:[]})
-        this.getTestCasePageResults(data)  
-        .then(response => this.changeWaitingState("TestCasePagesInfoCmp", false))
-        break;
+         case "updateDbState":
+            this.changeWaitingState("DbStatusInfoCmp", true);
+            this.testDbConnectionInfo()
+               .then(response => this.changeWaitingState("DbStatusInfoCmp", false))
+               .then(response => {
+                  if (this.state.isDbOnline) {
+                     this.setState({
+                        selectedRunTestCaseInfo: [],
+                        selectedRunMachineInfo: [],
+                        selectedRunId:"",
+                     });
+                     this.changeWaitingState("AllRunsInfoCmp", true);
+                     this.getAllTestRunsInfo()
+                        .then(response => this.changeWaitingState("AllRunsInfoCmp", false))
+                  }
+               })
+            break;
 
-      case "closeTestCasePagesDialog":
-        this.closeTestCaseDialog()
-        break;
+         case "updateAllRunsInfo":
+            this.changeWaitingState("AllRunsInfoCmp", true);
+            this.getAllTestRunsInfo()
+               .then(response => this.changeWaitingState("AllRunsInfoCmp", false))
+            break;
 
-      case "updateRunMachineInfo":
-        this.changeWaitingState(childrenCmp, true);
-        this.getRunMachineInfo()
-        .then(response => this.changeWaitingState(childrenCmp, false))
-        break;
+         case "updateRunTestCasesInfo":
+            this.changeWaitingState("RunTestCasesInfoCmp", true);
+            this.getRunTestCasesInfo(this.state.selectedRunId)
+               .then(response => this.changeWaitingState("RunTestCasesInfoCmp", false))
+            break;
 
-        case "updateMachinePlotInfo":
-        this.changeWaitingState(childrenCmp, true);
-        this.getCurrentRunMachinePlotInfo()
-        .then(response => this.changeWaitingState(childrenCmp, false))
-        break;
+         case "openTestCasePagesDialog":
+            this.changeWaitingState("TestCasePagesInfoCmp", true);
+            this.setState({ 
+                  testCasePagesDialogOpen: true, 
+                  selectedTestCase: data,
+               })
+            this.getTestCasePageResults(this.state.selectedRunId, data)
+               .then(response => this.changeWaitingState("TestCasePagesInfoCmp", false))
+            break;
 
+         case "updateRunMachineInfo":
+            this.changeWaitingState("MachinesInfoCmp", true);
+            this.getRunMachinesInfo(this.state.selectedRunId)
+               .then(response => this.changeWaitingState("MachinesInfoCmp", false))
+            break;
 
-        
+         case "openMachinePlotDialog":
+            this.changeWaitingState("MachinePlotCmp", true);
+            this.setState({ 
+                  machinePlotDialogOpen: true, 
+                  selectedMachine: data
+               })
+            this.getSelectedMachinePlotInfo(this.state.selectedRunId, data)
+               .then(response => this.changeWaitingState("MachinePlotCmp", false))
+            break;
 
-    }
-  }
+         case "closeTestCasePagesDialog":
+            this.closeTestCaseDialog()
+            break;
 
-  testDbConnectionInfo = function() { 
-    return(    
-      testDbConnection()
-      .then(response => {
-                          if(response.success === "true") { 
-                            this.setState({
-                              databaseStatus:((response.data === "True") ? true : false)
-                            }) 
-                          }
-                        })
-      .catch(error => alert("Error: " + error.message + "\n" + error.stack))
-    )
-  }
+         case "closeMachinePlotDialog":
+            this.closeMachinePlotDialog()
+            break;
+      }
+   }
 
-  getAllTestRunsInfo = function() {
-    return(
-      getAllTestRuns()
-      .then(response => {
-                          if(response.success === "true") {
-                            
-                            let completedRuns=[]
-                            for(let i=0;i<response.data.length;i++) {
-                              if(response.data[i].outcome==="Completed") {
-                                completedRuns.push(response.data[i])
-                              }
-                            }
-                            this.setState({
-                              allRunsInfo:completedRuns,
-                              selectedRun:0,
-                              selectedRunId:completedRuns[0].runID
-                            }); 
-                          }
-                        })
-    .catch(error => alert("Error: " + error.message + "\n" + error.stack))
-    )
-  }
+   testDbConnectionInfo = function () {
+      return (
+         testDbConnection()
+            .then(response => {
+               if (response.success === "true") {
+                  this.setState({
+                     isDbOnline: ((response.data === "True") ? true : false)
+                  })
+               }
+            })
+            .catch(error => alert("Error: " + error.message + "\n" + error.stack))
 
-  getRunTestCasesInfo = function() {
-    return(
-      getTestCaseResults(this.state.selectedRunId)
-      .then(response => {
-                          if(response.success === "true") { 
-                            this.setState({
-                              currentRunTestCaseInfo:response.data
-                            }); 
-                          }
-                        })
-    .catch(error => alert("Error: " + error.message + "\n" + error.stack))
-    )
-  }  
-  
-  getRunMachineInfo = function() {
-    return(
-      getMachinesInvolved(this.state.selectedRunId)
-      .then(response => {
-                          if(response.success === "true") {
-                            response.data.push(response.data.shift());
-                            this.setState({
-                              currentRunMachineInfo:response.data
-                            }); 
-                          }
-                        })
-    .catch(error => alert("Error: " + error.message + "\n" + error.stack))
-    )
-  }  
+      )
+   }
 
-  getCurrentRunMachinePlotInfo = function() {
-    let promise1 = getGraphData(this.state.selectedRunId, 
-                                this.state.currentRunMachineInfo[this.state.selectedMachine], 
-                                "Processor", 
-                                "%25%20Processor%20Time");
-    let promise2 = getGraphData(this.state.selectedRunId, 
-                                this.state.currentRunMachineInfo[this.state.selectedMachine], 
-                                "Memory", 
-                                "Available MBytes");
-    return(Promise.all([promise1, promise2])
-          .then(responses => {
-            if((responses[0].success === "true")&&(responses[1].success === "true")) { 
-              responses[1].data[1] = responses[1].data[1].map(x => x / 1024)
-              let tempPlotData = {
-                x:responses[0].data[0],
-                y1:responses[0].data[1],
-                y2:responses[1].data[1],
-                title:this.state.currentRunMachineInfo[this.state.selectedMachine],
-                xtitle:"time (mins)",
-                y1title:"% CPU",
-                y2title:"Available Memory",
-                y1DataName:"CPU",
-                y2DataName:"Memory",
-              }
-              this.setState({currentRunPlotData:tempPlotData});
+   getAllTestRunsInfo = function () {
+      return (
+         getAllTestRuns()
+            .then(response => {
+               if (response.success === "true") {
+
+                  let completedRuns = []
+                  for (let i = 0; i < response.data.length; i++) {
+                     if (response.data[i].outcome === "Completed") {
+                        completedRuns.push(response.data[i])
+                     }
+                  }
+                  this.setState({
+                     allRunsInfo: completedRuns,
+                     selectedRunIndex: 0,
+                     selectedRunId: completedRuns[0].runID
+                  });
+               }
+            })
+            .catch(error => alert("Error: " + error.message + "\n" + error.stack))
+      )
+   }
+
+   getRunTestCasesInfo = function (runId) {
+      return (
+         getTestCaseResults(runId)
+            .then(response => {
+               if (response.success === "true") {
+                  this.setState({
+                     selectedRunTestCaseInfo: response.data
+                  });
+               }
+            })
+            .catch(error => alert("Error: " + error.message + "\n" + error.stack))
+      )
+   }
+
+   getRunMachinesInfo = function (runId) {
+      return (
+         getMachinesInvolved(runId)
+            .then(response => {
+               if (response.success === "true") {
+                  response.data.push(response.data.shift());
+                  this.setState({
+                     selectedRunMachineInfo: response.data
+                  });
+               }
+            })
+            .catch(error => alert("Error: " + error.message + "\n" + error.stack))
+      )
+   }
+
+   getSelectedMachinePlotInfo = function (runId, machineName) {
+      let promise1 = getGraphData(
+         runId,
+         machineName,
+         "Processor",
+         "%25%20Processor%20Time");
+      let promise2 = getGraphData(
+         runId,
+         machineName,
+         "Memory",
+         "Available MBytes");
+      return (Promise.all([promise1, promise2])
+         .then(responses => {
+            if ((responses[0].success === "true") && (responses[1].success === "true")) {
+               responses[1].data[1] = responses[1].data[1].map(x => x / 1024)
+               let tempPlotData = {
+                  x: responses[0].data[0],
+                  y1: responses[0].data[1],
+                  y2: responses[1].data[1],
+                  title: "CPU and Memory counters info",
+                  xtitle: "time (mins)",
+                  y1title: "% CPU",
+                  y2title: "Available Memory",
+                  y1DataName: "CPU",
+                  y2DataName: "Memory",
+               }
+               this.setState({ selectedMachinePlotData: tempPlotData });
             }
-        })
-    .catch(error => alert("Error: " + error.message + "\n" + error.stack))
-    )
-  }
-  
-  getTestCasePageResults = function(testCaseName) {
-    return(
-      getPageResultsByTestCase(this.state.selectedRunId, testCaseName)
-      .then(response => {
-                          if(response.success === "true") { 
-                            this.setState({
-                              currentRunSelectedTestCasePagesInfo:response.data
-                            }); 
-                          }
-                        })
-    .catch(error => alert("Error: " + error.message + "\n" + error.stack))
-    )
-  }   
+         })
+         .catch(error => alert("Error: " + error.message + "\n" + error.stack))
+      )
+   }
 
-  closeTestCaseDialog = function(testCaseName) {
-    this.setState({testCasePagesOpen:false})
-  }
+   getTestCasePageResults = function (runId, testCaseName) {
+      return (
+         getPageResultsByTestCase(runId, testCaseName)
+            .then(response => {
+               if (response.success === "true") {
+                  this.setState({
+                     selectedTestCasePageInfo: response.data
+                  });
+               }
+            })
+            .catch(error => alert("Error: " + error.message + "\n" + error.stack))
+      )
+   }
+
+   closeTestCaseDialog = function () {
+      this.setState({ testCasePagesDialogOpen: false })
+   }
+   closeMachinePlotDialog = function () {
+      this.setState({ machinePlotDialogOpen: false })
+   }
+
+   changeWaitingState = function (component, newState) {
+      this.setState({ componentWaiting: updateObject(this.state.componentWaiting, component, newState) })
+   }
 
 
-///////////////////////////////////////////////////////////
-//Internal function to update state object for waiting state
-
-  changeWaitingState = function(component, newState) {
-    this.setState({componentWaiting:this.updateObject(this.state.componentWaiting, component, newState)})
-  }
-  updateObject = function(obj, key, value) {
-    obj[key] = value;
-    return obj;
-  }
- 
 
 }
 
 export default LoadTestInfoApp;
+
+
+const updateObject = function (obj, key, value) {
+   obj[key] = value;
+   return obj;
+}

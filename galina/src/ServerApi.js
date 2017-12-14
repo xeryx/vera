@@ -14,7 +14,16 @@ export function testDbConnection() {
             method: "get",
         })
         .then(response => response.json())
-        .then(requestId => getRequestResponseContent(requestId))
+        .then(responseJson => new Promise(
+            function(resolve, reject) {
+                if(responseJson.success !== "false") {
+                    resolve(getRequestResponseContent(responseJson))    
+                }
+                else {
+                    reject(Error(JSON.stringify(responseJson.error)));
+                }
+            })
+        )
     );
 };
 
@@ -24,8 +33,16 @@ export function getAllTestRuns() {
             method: "get",
         })
         .then(response => response.json())
-        .then(requestId => getRequestResponseContent(requestId))
-
+        .then(responseJson => new Promise(
+            function(resolve, reject) {
+                if(responseJson.success !== "false") {
+                    resolve(getRequestResponseContent(responseJson))    
+                }
+                else {
+                    reject(Error(JSON.stringify(responseJson.error)));
+                }
+            })
+        )
     );
 };
 
@@ -35,7 +52,16 @@ export function getTestRunInformation(runId) {
             method: "get",
         })
         .then(response => response.json())
-        .then(requestId => getRequestResponseContent(requestId))
+        .then(responseJson => new Promise(
+            function(resolve, reject) {
+                if(responseJson.success !== "false") {
+                    resolve(getRequestResponseContent(responseJson))    
+                }
+                else {
+                    reject(Error(JSON.stringify(responseJson.error)));
+                }
+            })
+        )    
     );
 };
 
@@ -45,7 +71,16 @@ export function getOverallResults(runId) {
             method: "get",
         })
         .then(response => response.json())
-        .then(requestId => getRequestResponseContent(requestId))
+        .then(responseJson => new Promise(
+            function(resolve, reject) {
+                if(responseJson.success !== "false") {
+                    resolve(getRequestResponseContent(responseJson))    
+                }
+                else {
+                    reject(Error(JSON.stringify(responseJson.error)));
+                }
+            })
+        )    
     );
 };
 
@@ -55,7 +90,16 @@ export function getPageResultsByTestCase(runId, testCaseName) {
             method: "get",
         })
         .then(response => response.json())
-        .then(requestId => getRequestResponseContent(requestId))
+        .then(responseJson => new Promise(
+            function(resolve, reject) {
+                if(responseJson.success !== "false") {
+                    resolve(getRequestResponseContent(responseJson))    
+                }
+                else {
+                    reject(Error(JSON.stringify(responseJson.error)));
+                }
+            })
+        ) 
     );
 };
 
@@ -65,7 +109,16 @@ export function getTestCaseResults(runId) {
             method: "get",
         })
         .then(response => response.json())
-        .then(requestId => getRequestResponseContent(requestId))
+        .then(responseJson => new Promise(
+            function(resolve, reject) {
+                if(responseJson.success !== "false") {
+                    resolve(getRequestResponseContent(responseJson))    
+                }
+                else {
+                    reject(Error(JSON.stringify(responseJson.error)));
+                }
+            })
+        )   
     );
 };
 
@@ -75,8 +128,16 @@ export function getSystemUnderTestResources(runId) {
             method: "get",
         })
         .then(response => response.json())
-        .then(requestId => getRequestResponseContent(requestId))
-
+        .then(responseJson => new Promise(
+            function(resolve, reject) {
+                if(responseJson.success !== "false") {
+                    resolve(getRequestResponseContent(responseJson))    
+                }
+                else {
+                    reject(Error(JSON.stringify(responseJson.error)));
+                }
+            })
+        )
     );
 };
 
@@ -86,7 +147,16 @@ export function getCounterCategories(runId) {
             method: "get",
         })
         .then(response => response.json())
-        .then(requestId => getRequestResponseContent(requestId))
+        .then(responseJson => new Promise(
+            function(resolve, reject) {
+                if(responseJson.success !== "false") {
+                    resolve(getRequestResponseContent(responseJson))    
+                }
+                else {
+                    reject(Error(JSON.stringify(responseJson.error)));
+                }
+            })
+        )
     );
 };
 
@@ -96,7 +166,16 @@ export function getAllCountersForCategory(runId, category) {
             method: "get",
         })
         .then(response => response.json())
-        .then(requestId => getRequestResponseContent(requestId))
+        .then(responseJson => new Promise(
+            function(resolve, reject) {
+                if(responseJson.success !== "false") {
+                    resolve(getRequestResponseContent(responseJson))    
+                }
+                else {
+                    reject(Error(JSON.stringify(responseJson.error)));
+                }
+            })
+        )  
     );
 };
 
@@ -106,7 +185,16 @@ export function getMachinesInvolved(runId) {
             method: "get",
         })
         .then(response => response.json())
-        .then(requestId => getRequestResponseContent(requestId))
+        .then(responseJson => new Promise(
+            function(resolve, reject) {
+                if(responseJson.success !== "false") {
+                    resolve(getRequestResponseContent(responseJson))    
+                }
+                else {
+                    reject(Error(JSON.stringify(responseJson.error)));
+                }
+            })
+        )  
     );
 };
 
@@ -116,7 +204,16 @@ export function getGraphData(runId, machine, category, counter) {
             method: "get",
         })
         .then(response => response.json())
-        .then(requestId => getRequestResponseContent(requestId))
+        .then(responseJson => new Promise(
+            function(resolve, reject) {
+                if(responseJson.success !== "false") {
+                    resolve(getRequestResponseContent(responseJson))    
+                }
+                else {
+                    reject(Error(JSON.stringify(responseJson.error)));
+                }
+            })
+        )
     );
 };
 
@@ -126,7 +223,15 @@ export function getRunInfo(command,runId) {
             method: "get",
         })
         .then(response => response.json())
-        .then(requestId => getRequestResponseContent(requestId))
-
+        .then(responseJson => new Promise(
+            function(resolve, reject) {
+                if(responseJson.success !== "false") {
+                    resolve(getRequestResponseContent(responseJson))    
+                }
+                else {
+                    reject(Error(JSON.stringify(responseJson.error)));
+                }
+            })
+        )
     );
 };

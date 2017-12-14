@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import CircularProgress from 'material-ui/CircularProgress';
 
 
-const compName = "DbStatusInfoCmp";
-
 class DbStatusInfoCmp extends Component {
     
     constructor(props) {
@@ -36,9 +34,7 @@ class DbStatusInfoCmp extends Component {
     }
 
     componentDidMount() {
-        this.props.callback(compName,"updateDbState",{})
-
-
+        this.props.callback("updateDbState",{})
     }
 
 }          
