@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import * as utils from '../utils.js'; 
 import CircularProgress from 'material-ui/CircularProgress';
 import RaisedButton from 'material-ui/RaisedButton';
+
 
 
 class MachinesExtendedInfoCmp extends Component {
@@ -42,16 +44,16 @@ class MachinesExtendedInfoCmp extends Component {
          let nonStorageMachineNames = [];
          let storageMachineNames = [];
 
-         (getUniqueKeyValuesInObjectArray(this.props.machineInfo,"MachineName")).forEach(function(name) {
-               if(isStorageServer(name))  {
+         (utils.getUniqueKeyValuesInObjectArray(this.props.machineInfo,"MachineName")).forEach(function(name) {
+               if(utils.isStorageServer(name))  {
                   storageMachineNames.push(name);        
                } else {
                   nonStorageMachineNames.push(name);        
                }
          });
 
-         let nonStorageMachineInfoObject = getObjectofArraysByUniqueKeyValues(this.props.machineInfo, "MachineName",nonStorageMachineNames);
-         let storageMachineInfoObject = getObjectofArraysByUniqueKeyValues(this.props.machineInfo, "MachineName",storageMachineNames);
+         let nonStorageMachineInfoObject = utils.getObjectofArraysByUniqueKeyValues(this.props.machineInfo, "MachineName",nonStorageMachineNames);
+         let storageMachineInfoObject = utils.getObjectofArraysByUniqueKeyValues(this.props.machineInfo, "MachineName",storageMachineNames);
 
          if (this.props.machineInfo.length > 0) {
 
@@ -64,8 +66,8 @@ class MachinesExtendedInfoCmp extends Component {
             for (let i = 0; i < nonStorageMachineNames.length; i++) {
                let machineInfoObj = nonStorageMachineInfoObject[nonStorageMachineNames[i]];
                
-               let cpuCounterObject = geObjectWithKeyValueFromArray(machineInfoObj, "CounterName", "% Processor Time");
-               let memoryCounterObject = geObjectWithKeyValueFromArray(machineInfoObj, "CounterName", "Available MBytes");
+               let cpuCounterObject = utils.geObjectWithKeyValueFromArray(machineInfoObj, "CounterName", "% Processor Time");
+               let memoryCounterObject = utils.geObjectWithKeyValueFromArray(machineInfoObj, "CounterName", "Available MBytes");
 
                nonStorageMachineInfoRows.push(<tr key={i}>
                   <td className="row-data-1" onClick={(e) => 
@@ -100,8 +102,8 @@ class MachinesExtendedInfoCmp extends Component {
             for (let i = 0; i < storageMachineNames.length; i++) {
                let machineInfoObj = storageMachineInfoObject[storageMachineNames[i]];
                
-               let diskIdleCounterObject = geObjectWithKeyValueFromArray(machineInfoObj, "CounterName", "% Idle Time");
-               let diskRateCounterObject = geObjectWithKeyValueFromArray(machineInfoObj, "CounterName", "Disk Bytes/sec");
+               let diskIdleCounterObject = utils.geObjectWithKeyValueFromArray(machineInfoObj, "CounterName", "% Idle Time");
+               let diskRateCounterObject = utils.geObjectWithKeyValueFromArray(machineInfoObj, "CounterName", "Disk Bytes/sec");
 
                storageMachineInfoRows.push(<tr key={i}>
                   <td className="row-data-1" onClick={(e) => 
@@ -158,47 +160,6 @@ class MachinesExtendedInfoCmp extends Component {
 
 export default MachinesExtendedInfoCmp;
 
-
-const isStorageServer = function (machineName) {
-   if(machineName.toLowerCase() === "perfmasterst.perftestmv.local") {
-      return true;
-   } else {
-      return false;
-   }
-}
-
-const getUniqueKeyValuesInObjectArray = function(obj, key) {
-   var keyElems = [];
-   obj.forEach(function(elem) {
-       if(keyElems.indexOf(elem[key]) < 0)  {
-           keyElems.push(elem[key]);
-       }
-   });
-   return keyElems;
-}
-
-const getObjectofArraysByUniqueKeyValues = function(obj, key, keyElems) {
-   var returnObject = {};
-   for(var i=0; i<keyElems.length;i++) {        
-       returnObject[keyElems[i]] = [];
-      for(let j=0;j<obj.length;j++) {
-           if(obj[j][key]=== keyElems[i])  {
-               returnObject[keyElems[i]].push(obj[j]);        
-           }
-      }
-   }        
-   return returnObject;  
-}
-
-const geObjectWithKeyValueFromArray = function(array, key, value) {
-   var returnObj = {};
-   array.forEach(function(elem) {
-       if(elem[key] === value)  {
-           returnObj = elem;
-       }
-   });
-   return returnObj;
-}
 
 
 //memory 24,134 cpu 43.1

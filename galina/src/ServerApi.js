@@ -76,6 +76,33 @@ export function getPageResultsByTestCase(runId, testCaseName) {
     );
 };
 
+export function getPageResults(runId) {
+   let path = '/loaddb/getPageResults/' + runId;
+   let cachedData = localStorage.getItem(path);
+   if(cachedData) {
+      return (new Promise(function(resolve, reject) {
+            resolve(JSON.parse(cachedData))
+         })
+      )
+   } 
+   return(
+        fetch(path, {
+            method: "get",
+        })
+        .then(response => response.json())
+        .then(responseJson => new Promise(
+            function(resolve, reject) {
+                if(responseJson.success !== "false") {
+                    resolve(getRequestResponseContent(responseJson, path))    
+                }
+                else {
+                    reject(Error(JSON.stringify(responseJson.error)));
+                }
+            })
+        ) 
+    );
+};
+
 export function getTestCaseResults(runId) {
    let path = '/loaddb/getTestCaseResults/' + runId;
    let cachedData = localStorage.getItem(path);

@@ -1,5 +1,6 @@
 import './styles/LoadTestInfoApp.css';
 import React, { Component } from 'react';
+import * as utils from '../utils.js'; 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import myTheme from '../themes/myTheme';
@@ -8,12 +9,13 @@ import {
    getAllTestRuns,
    getGraphData,
    getPageResultsByTestCase,
+   getPageResults,
    getTestCaseResults,
    getSystemUnderTestResources
 } from '../ServerApi'
 import AllRunsInfoCmp from '../my_modules/AllRunsInfoCmp'
 import DbStatusInfoCmp from "../my_modules/DbStatusInfoCmp"
-import RunTestCasesInfoCmp from "../my_modules/RunTestCasesInfoCmp"
+import RunTestCasesExtendedInfoCmp from "../my_modules/RunTestCasesExtendedInfoCmp"
 import TestCasePagesInfoCmp from "../my_modules/TestCasePagesInfoCmp"
 import MachinesExtendedInfoCmp from "../my_modules/MachinesExtendedInfoCmp"
 import MachinePlotCmp from "../my_modules/MachinePlotCmp"
@@ -28,7 +30,10 @@ class LoadTestInfoApp extends Component {
       this.state = {
          isDbOnline: false,
          allRunsInfo: [],
+
          selectedRunTestCaseInfo: [],
+         selectedRunTestCaseExtendedInfo: [],
+
          selectedTestCase: "",
          selectedTestCasePageInfo: [],
          selectedRunMachineExtendedInfo:[],
@@ -45,9 +50,9 @@ class LoadTestInfoApp extends Component {
             "DbStatusInfoCmp": false,
             "AllRunsInfoCmp": false,
             "TestCasePagesInfoCmp": false,
-            "RunTestCasesInfoCmp": false,
             "MachinePlotCmp": false,
             "MachinesExtendedInfoCmp":false,
+            "RunTestCasesExtendedInfoCmp":false,
          },
       };
    }
@@ -68,12 +73,13 @@ class LoadTestInfoApp extends Component {
          menuValue={this.state.selectedRunIndex}
       />
 
-      let runTestCasesInfo = <RunTestCasesInfoCmp
-         testCasesInfo={this.state.selectedRunTestCaseInfo}
-         isWaiting={this.state.componentWaiting["RunTestCasesInfoCmp"]}
+      let runTestCasesExtendedInfo = <RunTestCasesExtendedInfoCmp
+         testCasesPagesInfo={this.state.selectedRunTestCaseExtendedInfo}
+         testCasesOverallInfo={this.state.selectedRunTestCaseInfo}
+         isWaiting={this.state.componentWaiting["RunTestCasesExtendedInfoCmp"]}
          runId={this.state.selectedRunId}
          callback={this.childrenCallback}
-      />
+      />      
 
       let testCasePageDialog = <TestCasePagesInfoCmp
          isOpen={this.state.testCasePagesDialogOpen}
@@ -107,7 +113,7 @@ class LoadTestInfoApp extends Component {
                {allRunsInfoCmp}
             </div>
             <div style={{ margin: "10px 00px 10px 0px" }}>
-               {runTestCasesInfo}
+               {runTestCasesExtendedInfo}
             </div>
             <div style={{ margin: "35px 00px 10px 0px" }}>
                {runMachinesExtendedInfo}
@@ -134,7 +140,7 @@ class LoadTestInfoApp extends Component {
                selectedRunIndex: data,
                selectedRunId: this.state.allRunsInfo[data].runID,
                selectedRunTestCaseInfo: [],
-               selectedRunMachineInfo: [],
+               selectedRunTestCaseExtendedInfo: [],
                selectedRunMachineExtendedInfo: [],
             });
             break;
@@ -147,7 +153,7 @@ class LoadTestInfoApp extends Component {
                   if (this.state.isDbOnline) {
                      this.setState({
                         selectedRunTestCaseInfo: [],
-                        selectedRunMachineInfo: [],
+                        selectedRunTestCaseExtendedInfo: [],
                         selectedRunMachineExtendedInfo: [],
                         selectedRunId:"",
                      });
@@ -169,6 +175,13 @@ class LoadTestInfoApp extends Component {
             this.getRunTestCasesInfo(this.state.selectedRunId)
                .then(response => this.changeWaitingState("RunTestCasesInfoCmp", false))
             break;
+
+            case "updateRunTestCasesExtendedInfo":
+            this.changeWaitingState("RunTestCasesExtendedInfoCmp", true);
+            this.getRunTestCasesExtendedInfo(this.state.selectedRunId)
+               .then(response => this.changeWaitingState("RunTestCasesExtendedInfoCmp", false))
+            break;
+
 
          case "openTestCasePagesDialog":
             this.changeWaitingState("TestCasePagesInfoCmp", true);
@@ -261,6 +274,24 @@ class LoadTestInfoApp extends Component {
                if (response.success === "true") {
                   this.setState({
                      selectedRunTestCaseInfo: response.data
+                  });
+               }
+            })
+            .catch(error => alert("Error: " + error.message + "\n" + error.stack))
+      )
+   }
+
+
+   getRunTestCasesExtendedInfo = function (runId) {
+
+      let promise1 = getTestCaseResults(runId);
+      let promise2 = getPageResults(runId);
+      return (Promise.all([promise1, promise2])
+         .then(responses => {
+            if ((responses[0].success === "true") && (responses[1].success === "true")) {
+                  this.setState({
+                     selectedRunTestCaseExtendedInfo: responses[1].data,
+                     selectedRunTestCaseInfo: responses[0].data
                   });
                }
             })
@@ -372,7 +403,7 @@ class LoadTestInfoApp extends Component {
    }
 
    changeWaitingState = function (component, newState) {
-      this.setState({ componentWaiting: updateObject(this.state.componentWaiting, component, newState) })
+      this.setState({ componentWaiting: utils.updateObject(this.state.componentWaiting, component, newState) })
    }
 
 
@@ -382,7 +413,3 @@ class LoadTestInfoApp extends Component {
 export default LoadTestInfoApp;
 
 
-const updateObject = function (obj, key, value) {
-   obj[key] = value;
-   return obj;
-}
