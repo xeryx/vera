@@ -42,14 +42,12 @@ class RunTestCasesInfoCmp extends Component {
                 testCasesInfoHeaders = [
                     <td key={0} className="header-1">Test Case Name</td>,
                     <td key={1} className="header-1">Total Tests</td>,
-                    <td key={2} className="header-1">Average</td> 
                 ];
 
                 for (let i = 0; i < this.props.testCasesInfo.length; i++ ) {
                     testCasesInfoRows.push(<tr key={i}>
                             <td className="row-data-1" onClick={(e) => this.handleTestCaseClick(e, this.props.testCasesInfo[i].TestCaseName)}>{this.props.testCasesInfo[i].TestCaseName}</td>
                             <td className="row-data-2" >{this.props.testCasesInfo[i].TestsRun}</td>
-                            <td className="row-data-2">{parseFloat(this.props.testCasesInfo[i].Average).toFixed(1)}</td>
                         </tr>)
                 }
 

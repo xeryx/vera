@@ -9,13 +9,13 @@ import {
    getGraphData,
    getPageResultsByTestCase,
    getTestCaseResults,
-   getMachinesInvolved
+   getSystemUnderTestResources
 } from '../ServerApi'
 import AllRunsInfoCmp from '../my_modules/AllRunsInfoCmp'
 import DbStatusInfoCmp from "../my_modules/DbStatusInfoCmp"
 import RunTestCasesInfoCmp from "../my_modules/RunTestCasesInfoCmp"
 import TestCasePagesInfoCmp from "../my_modules/TestCasePagesInfoCmp"
-import MachinesInfoCmp from "../my_modules/MachinesInfoCmp"
+import MachinesExtendedInfoCmp from "../my_modules/MachinesExtendedInfoCmp"
 import MachinePlotCmp from "../my_modules/MachinePlotCmp"
 
 class LoadTestInfoApp extends Component {
@@ -31,7 +31,7 @@ class LoadTestInfoApp extends Component {
          selectedRunTestCaseInfo: [],
          selectedTestCase: "",
          selectedTestCasePageInfo: [],
-         selectedRunMachineInfo: [],
+         selectedRunMachineExtendedInfo:[],
          selectedMachine: "",
          selectedMachinePlotData: {},
          
@@ -44,10 +44,10 @@ class LoadTestInfoApp extends Component {
          componentWaiting: {
             "DbStatusInfoCmp": false,
             "AllRunsInfoCmp": false,
-            "MachinesInfoCmp": false,
             "TestCasePagesInfoCmp": false,
             "RunTestCasesInfoCmp": false,
             "MachinePlotCmp": false,
+            "MachinesExtendedInfoCmp":false,
          },
       };
    }
@@ -83,9 +83,9 @@ class LoadTestInfoApp extends Component {
          isWaiting={this.state.componentWaiting["TestCasePagesInfoCmp"]}
       />
 
-      let runMachinesInfo = <MachinesInfoCmp
-         machineInfo={this.state.selectedRunMachineInfo}
-         isWaiting={this.state.componentWaiting["MachinesInfoCmp"]}
+      let runMachinesExtendedInfo = <MachinesExtendedInfoCmp
+         machineInfo={this.state.selectedRunMachineExtendedInfo}
+         isWaiting={this.state.componentWaiting["MachinesExtendedInfoCmp"]}
          runId={this.state.selectedRunId}
          callback={this.childrenCallback}
       />
@@ -110,7 +110,7 @@ class LoadTestInfoApp extends Component {
                {runTestCasesInfo}
             </div>
             <div style={{ margin: "35px 00px 10px 0px" }}>
-               {runMachinesInfo}
+               {runMachinesExtendedInfo}
             </div>
             <div style={{ margin: "20px 0px 10px 0px" }}>
                {testCasePageDialog}
@@ -135,6 +135,7 @@ class LoadTestInfoApp extends Component {
                selectedRunId: this.state.allRunsInfo[data].runID,
                selectedRunTestCaseInfo: [],
                selectedRunMachineInfo: [],
+               selectedRunMachineExtendedInfo: [],
             });
             break;
 
@@ -147,6 +148,7 @@ class LoadTestInfoApp extends Component {
                      this.setState({
                         selectedRunTestCaseInfo: [],
                         selectedRunMachineInfo: [],
+                        selectedRunMachineExtendedInfo: [],
                         selectedRunId:"",
                      });
                      this.changeWaitingState("AllRunsInfoCmp", true);
@@ -178,11 +180,11 @@ class LoadTestInfoApp extends Component {
                .then(response => this.changeWaitingState("TestCasePagesInfoCmp", false))
             break;
 
-         case "updateRunMachineInfo":
-            this.changeWaitingState("MachinesInfoCmp", true);
-            this.getRunMachinesInfo(this.state.selectedRunId)
-               .then(response => this.changeWaitingState("MachinesInfoCmp", false))
-            break;
+         case "updateRunMachineExtendedInfo":
+            this.changeWaitingState("MachinesExtendedInfoCmp", true);
+            this.getRunMachinesExtendedInfo(this.state.selectedRunId)
+               .then(response => this.changeWaitingState("MachinesExtendedInfoCmp", false))
+            break;            
 
          case "openMachinePlotDialog":
             this.changeWaitingState("MachinePlotCmp", true);
@@ -191,6 +193,16 @@ class LoadTestInfoApp extends Component {
                   selectedMachine: data
                })
             this.getSelectedMachinePlotInfo(this.state.selectedRunId, data)
+               .then(response => this.changeWaitingState("MachinePlotCmp", false))
+            break;
+
+         case "openMachineDiskPlotDialog":
+            this.changeWaitingState("MachinePlotCmp", true);
+            this.setState({ 
+                  machinePlotDialogOpen: true, 
+                  selectedMachine: data
+               })
+            this.getSelectedMachineDiskPlotInfo(this.state.selectedRunId, data)
                .then(response => this.changeWaitingState("MachinePlotCmp", false))
             break;
 
@@ -256,14 +268,14 @@ class LoadTestInfoApp extends Component {
       )
    }
 
-   getRunMachinesInfo = function (runId) {
+   getRunMachinesExtendedInfo = function (runId) {
       return (
-         getMachinesInvolved(runId)
+         getSystemUnderTestResources(runId)
             .then(response => {
                if (response.success === "true") {
                   response.data.push(response.data.shift());
                   this.setState({
-                     selectedRunMachineInfo: response.data
+                     selectedRunMachineExtendedInfo: response.data
                   });
                }
             })
@@ -303,6 +315,40 @@ class LoadTestInfoApp extends Component {
          .catch(error => alert("Error: " + error.message + "\n" + error.stack))
       )
    }
+
+   getSelectedMachineDiskPlotInfo = function (runId, machineName) {
+      let promise1 = getGraphData(
+         runId,
+         machineName,
+         "PhysicalDisk",
+         "%25%20Idle%20Time");
+      let promise2 = getGraphData(
+         runId,
+         machineName,
+         "PhysicalDisk",
+         "Disk%20Bytes%2Fsec");
+      return (Promise.all([promise1, promise2])
+         .then(responses => {
+            if ((responses[0].success === "true") && (responses[1].success === "true")) {
+               responses[1].data[1] = responses[1].data[1].map(x => x / 1048576)
+               let tempPlotData = {
+                  x: responses[0].data[0],
+                  y1: responses[0].data[1],
+                  y2: responses[1].data[1],
+                  title: "Disk counters info",
+                  xtitle: "time (mins)",
+                  y1title: "% Idle time",
+                  y2title: "Disk MB/s",
+                  y1DataName: "Disk Idle %",
+                  y2DataName: "Disk usage",
+               }
+               this.setState({ selectedMachinePlotData: tempPlotData });
+            }
+         })
+         .catch(error => alert("Error: " + error.message + "\n" + error.stack))
+      )
+   }
+
 
    getTestCasePageResults = function (runId, testCaseName) {
       return (
