@@ -6,7 +6,7 @@ class DbStatusInfoCmp extends Component {
     
     constructor(props) {
         super(props); 
-        this.componentDidMount = this.componentDidMount.bind(this); 
+        this.updateButtonClick = this.updateButtonClick.bind(this); 
     }
 
     render() {  
@@ -26,16 +26,16 @@ class DbStatusInfoCmp extends Component {
         return(
 
             <div style={{float:"right", fontSize:"16px"}}>
-                <button style={{background:"transparent", border: "none", outline:"none", height:20, width:50}} onClick={this.componentDidMount}></button>
+                <button style={{background:"transparent", border: "none", outline:"none", height:20, width:50}} onClick={this.updateButtonClick}></button>
                 <span>DB connection status:</span>
                 <span style={{color:color, padding:"10px"}}>{content}</span> 
             </div>
         )
     }
 
-    componentDidMount() {
+    updateButtonClick() {
         this.props.callback("updateDbState",{})
-    }
+   }
 
 }          
 

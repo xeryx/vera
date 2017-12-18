@@ -28,3 +28,17 @@ tr,td {
     border: 1px solid black;
     
 }
+
+.section-title {
+   color:rgb(175, 175, 175);
+   font-size: 20px;
+   font-weight: bold;
+   padding: 0px 0px 10px 0px;
+
+}
+
+.section-waiting {
+   color:rgb(175, 175, 175);
+   font-size: 18px;
+
+}

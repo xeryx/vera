@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import * as utils from '../utils.js';
 import CircularProgress from 'material-ui/CircularProgress';
-import RaisedButton from 'material-ui/RaisedButton';
+//import RaisedButton from 'material-ui/RaisedButton';
 
 
 class RunTestCasesExtendedInfoCmp extends Component {
@@ -14,8 +14,7 @@ class RunTestCasesExtendedInfoCmp extends Component {
         let testCasesInfoHeaders = [];
 
         let componentContent = "";
-        let loadInfoButton = "";
-
+  /*    let loadInfoButton = "";
 
         if(this.props.runId !== "") {
             loadInfoButton = 
@@ -27,12 +26,12 @@ class RunTestCasesExtendedInfoCmp extends Component {
                     disabled={this.props.isWaiting}
                 />
         }
-
+*/
         if(this.props.isWaiting) {
             componentContent = 
             <div> 
-                <div>{loadInfoButton}</div>
-                <span style={{fontSize:"16px",padding:"0px 20px 0px 0px"}}>Loading test cases performance info...</span>
+                {/*<div>{loadInfoButton}</div>*/}
+                <span className="section-waiting">Loading test cases performance info...</span>
                 <span><CircularProgress size={25}/></span> 
             </div>
              
@@ -56,11 +55,11 @@ class RunTestCasesExtendedInfoCmp extends Component {
                   }
 
                   pagesInfoByTestCase[uniqueTestCases[i]]["mostSignificantCall"] = 
-                                 {
-                                    url: pagesInfoByTestCase[uniqueTestCases[i]][mostSignificantCallIndex].RequestUri,
-                                    count: pagesInfoByTestCase[uniqueTestCases[i]][mostSignificantCallIndex].PageCount,
-                                    average: pagesInfoByTestCase[uniqueTestCases[i]][mostSignificantCallIndex].Average
-                                 }
+                        {
+                           url: pagesInfoByTestCase[uniqueTestCases[i]][mostSignificantCallIndex].RequestUri,
+                           count: pagesInfoByTestCase[uniqueTestCases[i]][mostSignificantCallIndex].PageCount,
+                           average: pagesInfoByTestCase[uniqueTestCases[i]][mostSignificantCallIndex].Average
+                        }
 
                   for(let k = 0; k < this.props.testCasesOverallInfo.length; k++) {
                      if(this.props.testCasesOverallInfo[k].TestCaseName === uniqueTestCases[i] ) {
@@ -69,8 +68,6 @@ class RunTestCasesExtendedInfoCmp extends Component {
                   }                  
                               
                }
-
-
 
                testCasesInfoHeaders = [
                     <td key={0} className="header-1">Test Case Name</td>,
@@ -96,7 +93,7 @@ class RunTestCasesExtendedInfoCmp extends Component {
 
                 testCasesInfoElem = 
                     <div>
-                        <div>Test cases executed:</div>
+                        <div className="section-title">Test cases executed:</div>
                         <div style={{"margin":"10px 0px 0px 0px"}}>
                             <table><tbody>
                                 <tr>
@@ -109,23 +106,21 @@ class RunTestCasesExtendedInfoCmp extends Component {
 
                 componentContent = 
                 <div> 
-                    {loadInfoButton}
+                    {/*loadInfoButton*/}
                     <div style={{"margin":"10px 0px 0px 0px"}}>
                         {testCasesInfoElem}
                     </div>
                 </div>            
-            } else {
+            }/* else {
                 componentContent = loadInfoButton
-            }
+            }*/
 
         }
         
         return(componentContent)
-
-
     }
 
-    handleUpdateTestCasesInfo = (event, index, value) => this.props.callback("updateRunTestCasesExtendedInfo",{});
+//    handleUpdateTestCasesInfo = (event, index, value) => this.props.callback("updateRunTestCasesExtendedInfo",{});
     handleTestCaseClick = function(event, data) {
         this.props.callback("openTestCasePagesDialog",data);
     }

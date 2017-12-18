@@ -20,12 +20,14 @@ import TestCasePagesInfoCmp from "../my_modules/TestCasePagesInfoCmp"
 import MachinesExtendedInfoCmp from "../my_modules/MachinesExtendedInfoCmp"
 import MachinePlotCmp from "../my_modules/MachinePlotCmp"
 
+
 class LoadTestInfoApp extends Component {
 
    constructor(props) {
       super(props);
 
       this.childrenCallback = this.childrenCallback.bind(this);
+      this.componentDidMount = this.componentDidMount.bind(this);
 
       this.state = {
          isDbOnline: false,
@@ -132,60 +134,35 @@ class LoadTestInfoApp extends Component {
 
       switch (command) {
 
-         default:
-            break;
-
-         case "runMenuChange":
-            this.setState({
-               selectedRunIndex: data,
-               selectedRunId: this.state.allRunsInfo[data].runID,
-               selectedRunTestCaseInfo: [],
-               selectedRunTestCaseExtendedInfo: [],
-               selectedTestCasePageInfo: [],
-               selectedRunMachineExtendedInfo: [],
-            });
-            break;
-
          case "updateDbState":
             this.changeWaitingState("DbStatusInfoCmp", true);
-            this.testDbConnectionInfo()
-               .then(response => this.changeWaitingState("DbStatusInfoCmp", false))
-               .then(response => {
-                  if (this.state.isDbOnline) {
-                     this.setState({
-                        selectedRunTestCaseInfo: [],
-                        selectedRunTestCaseExtendedInfo: [],
-                        selectedTestCasePageInfo: [],
-                        selectedRunMachineExtendedInfo: [],
-                        selectedRunId:"",
-                        selectedMachine: "",
-                        selectedMachinePlotData: {},
-                  });
-                  this.changeWaitingState("AllRunsInfoCmp", true);
-                  this.getAllTestRunsInfo()
-                     .then(response => this.changeWaitingState("AllRunsInfoCmp", false))
-                  }
-               })
-            break;
+            return(
+               this.testDbConnectionInfo()
+                  .then(response => {
+                     this.changeWaitingState("DbStatusInfoCmp", false)
+                     return response;
+                  })
+            );
 
          case "updateAllRunsInfo":
             this.changeWaitingState("AllRunsInfoCmp", true);
-            this.getAllTestRunsInfo()
-               .then(response => this.changeWaitingState("AllRunsInfoCmp", false))
-            break;
-
-         case "updateRunTestCasesInfo":
-            this.changeWaitingState("RunTestCasesInfoCmp", true);
-            this.getRunTestCasesInfo(this.state.selectedRunId)
-               .then(response => this.changeWaitingState("RunTestCasesInfoCmp", false))
-            break;
+            return(
+               this.getAllTestRunsInfo()
+                  .then(response => {
+                        this.changeWaitingState("AllRunsInfoCmp", false);
+                        return response;
+                     })
+            );
 
             case "updateRunTestCasesExtendedInfo":
             this.changeWaitingState("RunTestCasesExtendedInfoCmp", true);
-            this.getRunTestCasesExtendedInfo(this.state.selectedRunId)
-               .then(response => this.changeWaitingState("RunTestCasesExtendedInfoCmp", false))
-            break;
-
+            return(
+               this.getRunTestCasesExtendedInfo(data)
+                  .then(response => {
+                     this.changeWaitingState("RunTestCasesExtendedInfoCmp", false)
+                     return response;
+                  })
+            );
 
          case "openTestCasePagesDialog":
             this.changeWaitingState("TestCasePagesInfoCmp", true);
@@ -194,15 +171,23 @@ class LoadTestInfoApp extends Component {
                testCasePagesDialogOpen: true, 
                selectedTestCase: data,
             })
-            this.getTestCasePageResults(this.state.selectedRunId, data)
-               .then(response => this.changeWaitingState("TestCasePagesInfoCmp", false))
-            break;
+            return(
+               this.getTestCasePageResults(this.state.selectedRunId, data)
+                  .then(response => {
+                     this.changeWaitingState("TestCasePagesInfoCmp", false)
+                     return response;
+                  })
+            );
 
          case "updateRunMachineExtendedInfo":
             this.changeWaitingState("MachinesExtendedInfoCmp", true);
-            this.getRunMachinesExtendedInfo(this.state.selectedRunId)
-               .then(response => this.changeWaitingState("MachinesExtendedInfoCmp", false))
-            break;            
+            return(
+               this.getRunMachinesExtendedInfo(data)
+                  .then(response => {
+                     this.changeWaitingState("MachinesExtendedInfoCmp", false)
+                     return response;
+                  })
+            );            
 
          case "openMachinePlotDialog":
             this.changeWaitingState("MachinePlotCmp", true);
@@ -211,9 +196,10 @@ class LoadTestInfoApp extends Component {
                machinePlotDialogOpen: true, 
                selectedMachine: data
             })
-            this.getSelectedMachinePlotInfo(this.state.selectedRunId, data)
-               .then(response => this.changeWaitingState("MachinePlotCmp", false))
-            break;
+            return(
+               this.getSelectedMachinePlotInfo(this.state.selectedRunId, data)
+                  .then(response => this.changeWaitingState("MachinePlotCmp", false))
+            );
 
          case "openMachineDiskPlotDialog":
             this.changeWaitingState("MachinePlotCmp", true);
@@ -222,9 +208,20 @@ class LoadTestInfoApp extends Component {
                machinePlotDialogOpen: true, 
                selectedMachine: data
             })
-            this.getSelectedMachineDiskPlotInfo(this.state.selectedRunId, data)
-               .then(response => this.changeWaitingState("MachinePlotCmp", false))
-            break;
+            return(
+               this.getSelectedMachineDiskPlotInfo(this.state.selectedRunId, data)
+                  .then(response => this.changeWaitingState("MachinePlotCmp", false))
+            );
+
+         case "runMenuChange":
+            this.clearState();
+            this.setState({
+               selectedRunIndex: data,
+               selectedRunId: this.state.allRunsInfo[data].runID,
+            });
+            this.childrenCallback("updateRunTestCasesExtendedInfo", this.state.allRunsInfo[data].runID);
+            this.childrenCallback("updateRunMachineExtendedInfo", this.state.allRunsInfo[data].runID);
+           break;
 
          case "closeTestCasePagesDialog":
             this.closeTestCaseDialog()
@@ -233,6 +230,9 @@ class LoadTestInfoApp extends Component {
          case "closeMachinePlotDialog":
             this.closeMachinePlotDialog()
             break;
+
+         default:
+            break;            
       }
    }
 
@@ -247,7 +247,6 @@ class LoadTestInfoApp extends Component {
                }
             })
             .catch(error => alert("Error: " + error.message + "\n" + error.stack))
-
       )
    }
 
@@ -255,9 +254,8 @@ class LoadTestInfoApp extends Component {
       return (
          getAllTestRuns()
             .then(response => {
+               let completedRuns = []
                if (response.success === "true") {
-
-                  let completedRuns = []
                   for (let i = 0; i < response.data.length; i++) {
                      if (response.data[i].outcome === "Completed") {
                         completedRuns.push(response.data[i])
@@ -269,6 +267,7 @@ class LoadTestInfoApp extends Component {
                      selectedRunId: completedRuns[0].runID
                   });
                }
+               return completedRuns;
             })
             .catch(error => alert("Error: " + error.message + "\n" + error.stack))
       )
@@ -287,7 +286,6 @@ class LoadTestInfoApp extends Component {
             .catch(error => alert("Error: " + error.message + "\n" + error.stack))
       )
    }
-
 
    getRunTestCasesExtendedInfo = function (runId) {
 
@@ -412,6 +410,25 @@ class LoadTestInfoApp extends Component {
       this.setState({ componentWaiting: utils.updateObject(this.state.componentWaiting, component, newState) })
    }
 
+   clearState = function() {
+      this.setState({
+         selectedRunTestCaseInfo: [],
+         selectedRunTestCaseExtendedInfo: [],
+         selectedTestCasePageInfo: [],
+         selectedRunMachineExtendedInfo: [],
+         selectedMachine: "",
+         selectedMachinePlotData: {},
+      });
+   }
+
+   componentDidMount() {
+      this.childrenCallback("updateDbState")
+         .then(response => this.childrenCallback("updateAllRunsInfo"))
+         .then(response => {
+            this.childrenCallback("updateRunTestCasesExtendedInfo",response[0].runID);
+            this.childrenCallback("updateRunMachineExtendedInfo",response[0].runID);
+         });
+   }
 }
 
 export default LoadTestInfoApp;

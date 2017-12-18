@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import * as utils from '../utils.js'; 
 import CircularProgress from 'material-ui/CircularProgress';
-import RaisedButton from 'material-ui/RaisedButton';
-
+//import RaisedButton from 'material-ui/RaisedButton';
 
 
 class MachinesExtendedInfoCmp extends Component {
@@ -18,7 +17,7 @@ class MachinesExtendedInfoCmp extends Component {
       let storageMachineInfoHeaders = [];
 
       let componentContent = "";
-      let loadInfoButton = "";
+/*    let loadInfoButton = "";
 
       if (this.props.runId !== "") {
          loadInfoButton =
@@ -30,12 +29,12 @@ class MachinesExtendedInfoCmp extends Component {
                disabled={this.props.isWaiting}
             />
       }
-
+*/
       if (this.props.isWaiting) {
          componentContent =
             <div>
-               <div>{loadInfoButton}</div>
-               <span style={{ fontSize: "16px", padding: "0px 20px 0px 0px" }}>Loading environment info...</span>
+               {/*<div>{loadInfoButton}</div>*/}
+               <span className="section-waiting">Loading environment info...</span>
                <span><CircularProgress size={25} /></span>
             </div>
 
@@ -60,7 +59,7 @@ class MachinesExtendedInfoCmp extends Component {
             nonStorageMachineInfoHeaders = [
                <td key={0} className="header-1">Machine name</td>,
                <td key={1} className="header-1">% CPU time</td>,
-               <td key={2} className="header-1">Avail mem (GB)</td>,
+               <td key={2} className="header-1">Avail mem at end (GB)</td>,
               ];
 
             for (let i = 0; i < nonStorageMachineNames.length; i++) {
@@ -80,7 +79,7 @@ class MachinesExtendedInfoCmp extends Component {
 
             nonStorageMachinesInfoElem =
                <div>
-                  <div>Environment info:</div>
+                  <div className="section-title">Environment info:</div>
                   <div style={{ "margin": "10px 0px 0px 0px" }}>
                      <table><tbody>
                         <tr>
@@ -130,7 +129,7 @@ class MachinesExtendedInfoCmp extends Component {
 
             componentContent =
                <div>
-                  {loadInfoButton}
+                  {/*loadInfoButton*/}
                   <div style={{ "margin": "20px 0px 0px 0px" }}>
                      {nonStorageMachinesInfoElem}
                   </div>
@@ -138,17 +137,17 @@ class MachinesExtendedInfoCmp extends Component {
                      {storageMachinesInfoElem}
                   </div>
                </div>
-         } else {
+         } /*else {
             componentContent = loadInfoButton
 
-         }
+         }*/
       }
 
 
       return (componentContent)
    }
 
-   handleUpdateMachinesInfoRequest = (event, index, value) => this.props.callback("updateRunMachineExtendedInfo", {});
+   //handleUpdateMachinesInfoRequest = (event, index, value) => this.props.callback("updateRunMachineExtendedInfo", {});
    handleNonStorageMachineClick = function (event, data) {
       this.props.callback("openMachinePlotDialog", data);
    }
