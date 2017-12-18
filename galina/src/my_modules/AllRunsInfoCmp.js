@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import CircularProgress from 'material-ui/CircularProgress';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
-import ReqsPerSecCmp from './ReqsPerSecCmp'
+//import ReqsPerSecCmp from './ReqsPerSecCmp'
 
 
 class AllRunsInfoCmp extends Component {
@@ -73,10 +73,10 @@ class AllRunsInfoCmp extends Component {
                 <tr><td className="row-data-1">Start Time</td><td className="row-data-2">{selectedObj.startTime}</td></tr>
                 <tr><td className="row-data-1">End Time</td><td className="row-data-2">{selectedObj.endTime}</td></tr>
                 <tr><td className="row-data-1">ID</td><td className="row-data-2">{selectedObj.runID}</td></tr>
-                <ReqsPerSecCmp 
+                {/*<ReqsPerSecCmp 
                     runReqsPerSec = "N/A"
                     isWaiting = {this.state.componentWaiting["ReqsPerSecCmp"]}
-                />
+                />*/}
                 </tbody></table>
             
                 componentContent = 
