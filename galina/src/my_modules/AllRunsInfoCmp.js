@@ -41,12 +41,12 @@ class AllRunsInfoCmp extends Component {
                 }
         
                 selectedRunGeneralInfoTable = <table><tbody>
-                <tr><td className="row-data-1">Users</td><td className="row-data-2">{selectedObj.users}</td></tr>
-                <tr><td className="row-data-1">Duration (mins)</td><td className="row-data-2">{durationMins}</td></tr>
-                <tr><td className="row-data-1">Start Time</td><td className="row-data-2">{selectedObj.startTime}</td></tr>
-                <tr><td className="row-data-1">End Time</td><td className="row-data-2">{selectedObj.endTime}</td></tr>
-                <tr><td className="row-data-1">Description</td><td className="row-data-2">{selectedObj.description}</td></tr>
-                <tr><td className="row-data-1">Analysis</td><td className="row-data-2">{selectedObj.comment.replace("[PERFTESTMV\\loadtester]","")}</td></tr>
+                <tr><td className="row-data-1-nolink">Users</td><td className="row-data-2">{selectedObj.users}</td></tr>
+                <tr><td className="row-data-1-nolink">Duration (mins)</td><td className="row-data-2">{durationMins}</td></tr>
+                <tr><td className="row-data-1-nolink">Start Time</td><td className="row-data-2">{selectedObj.startTime}</td></tr>
+                <tr><td className="row-data-1-nolink">End Time</td><td className="row-data-2">{selectedObj.endTime}</td></tr>
+                <tr><td className="row-data-1-nolink">Description</td><td className="row-data-2">{selectedObj.description}</td></tr>
+                <tr><td className="row-data-1-nolink">Analysis</td><td className="row-data-2">{selectedObj.comment.replace("[PERFTESTMV\\loadtester]","")}</td></tr>
                 </tbody></table>
             
                 componentContent = 

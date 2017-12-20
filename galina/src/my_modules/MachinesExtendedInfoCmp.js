@@ -79,7 +79,7 @@ class MachinesExtendedInfoCmp extends Component {
 
             nonStorageMachinesInfoElem =
                <div>
-                  <div className="section-title">Environment info:</div>
+                  <div className="section-title">Environment info (counter plots):</div>
                   <div style={{ "margin": "10px 0px 0px 0px" }}>
                      <table><tbody>
                         <tr>

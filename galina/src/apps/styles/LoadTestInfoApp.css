@@ -1,6 +1,6 @@
 body {
     font-family: 'Roboto', sans-serif;
-    background-color:rgba(0, 15, 5, 0.87);
+    background-color:rgb(33, 46, 37);
     padding: 10px 15px 30px 15px;   
     font-Size:18px;
     color:white
@@ -16,6 +16,16 @@ body {
     padding: 3px 10px 3px 5px;
     color:white;
     font-size: 16px;
+    cursor: pointer;
+}
+
+.row-data-1:hover {
+   color: rgb(6,69,173);
+}
+.row-data-1-nolink {
+   padding: 3px 10px 3px 5px;
+   color:white;
+   font-size: 16px;
 }
 
 .header-1 {

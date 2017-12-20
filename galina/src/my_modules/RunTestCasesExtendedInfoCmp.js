@@ -84,7 +84,7 @@ class RunTestCasesExtendedInfoCmp extends Component {
                                  {uniqueTestCases[i]}
                            </td>
                             <td className="row-data-2">{pagesInfoByTestCase[uniqueTestCases[i]]["totalTests"]}</td>
-                            <td className="row-data-1">{pagesInfoByTestCase[uniqueTestCases[i]]["mostSignificantCall"].url}</td>
+                            <td className="row-data-1-nolink">{pagesInfoByTestCase[uniqueTestCases[i]]["mostSignificantCall"].url}</td>
                             <td className="row-data-2">{pagesInfoByTestCase[uniqueTestCases[i]]["mostSignificantCall"].count}</td>
                             <td className="row-data-2">{
                                  parseFloat(pagesInfoByTestCase[uniqueTestCases[i]]["mostSignificantCall"].average).toFixed(2)}</td>
