@@ -22,7 +22,7 @@
 
   "proxy": {
     "/": {
-        "target": "http://vmagent29.perftestmv.local:3000"
+        "target": "http://vmagent29.perftestmv.local"
     }
   }
 

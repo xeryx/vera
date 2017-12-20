@@ -26,7 +26,7 @@ class AllRunsInfoCmp extends Component {
 
             if(this.props.runsInfo.length > 0) {
                 for (let i = 0; i < this.props.runsInfo.length; i++ ) {
-                    runItems.push(<MenuItem value={i} primaryText={this.props.runsInfo[i].startTime}  key={i} />);
+                    runItems.push(<MenuItem value={i} primaryText={this.props.runsInfo[i].description + " (" + this.props.runsInfo[i].startTime + ")"}  key={i} />);
                 }
     
                 selectedObj = this.props.runsInfo[this.props.menuValue];
@@ -45,12 +45,14 @@ class AllRunsInfoCmp extends Component {
                 <tr><td className="row-data-1">Duration (mins)</td><td className="row-data-2">{durationMins}</td></tr>
                 <tr><td className="row-data-1">Start Time</td><td className="row-data-2">{selectedObj.startTime}</td></tr>
                 <tr><td className="row-data-1">End Time</td><td className="row-data-2">{selectedObj.endTime}</td></tr>
+                <tr><td className="row-data-1">Description</td><td className="row-data-2">{selectedObj.description}</td></tr>
+                <tr><td className="row-data-1">Analysis</td><td className="row-data-2">{selectedObj.comment.replace("[PERFTESTMV\\loadtester]","")}</td></tr>
                 </tbody></table>
             
                 componentContent = 
                     <div>
                     <div className="section-title">Load test runs:</div>
-                    <div style={{float:"left", width:"250px"}}>    
+                    <div style={{float:"left"}}>    
                         <DropDownMenu 
                             value={this.props.menuValue} 
                             onChange={this.handleChangeMenu}

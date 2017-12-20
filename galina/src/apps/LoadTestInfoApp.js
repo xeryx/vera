@@ -136,6 +136,9 @@ class LoadTestInfoApp extends Component {
 
          case "updateDbState":
             this.changeWaitingState("DbStatusInfoCmp", true);
+            this.setState({ 
+               isDbOnline: false,
+            })
             return(
                this.testDbConnectionInfo()
                   .then(response => {
@@ -427,7 +430,8 @@ class LoadTestInfoApp extends Component {
          .then(response => {
             this.childrenCallback("updateRunTestCasesExtendedInfo",response[0].runID);
             this.childrenCallback("updateRunMachineExtendedInfo",response[0].runID);
-         });
+         })
+         .catch(error => alert("Error: " + error.message + "\n" + error.stack))
    }
 }
 
