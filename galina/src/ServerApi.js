@@ -5,7 +5,7 @@ export function getRequestResponseContent(requestId, requestPath) {
             method: "get",
         })
         .then(response => response.json())
-        .then(responseJson => {localStorage.setItem(requestPath,JSON.stringify(responseJson)); return responseJson})
+        .then(responseJson => {try{localStorage.setItem(requestPath,JSON.stringify(responseJson))}catch(err){}; return responseJson})
     );
 };
 
@@ -51,7 +51,8 @@ export function getAllTestRuns() {
 
 export function getPageResultsByTestCase(runId, testCaseName) {
    let path = '/loaddb/getPageResultsByTestCase/' + runId + '/' + testCaseName;
-   let cachedData = localStorage.getItem(path);
+   let cachedData = null;
+   try {cachedData = localStorage.getItem(path);} catch(err){}
    if(cachedData) {
       return (new Promise(function(resolve, reject) {
             resolve(JSON.parse(cachedData))
@@ -78,7 +79,8 @@ export function getPageResultsByTestCase(runId, testCaseName) {
 
 export function getPageResults(runId) {
    let path = '/loaddb/getPageResults/' + runId;
-   let cachedData = localStorage.getItem(path);
+   let cachedData = null;
+   try {cachedData = localStorage.getItem(path);} catch(err){}
    if(cachedData) {
       return (new Promise(function(resolve, reject) {
             resolve(JSON.parse(cachedData))
@@ -105,7 +107,8 @@ export function getPageResults(runId) {
 
 export function getTestCaseResults(runId) {
    let path = '/loaddb/getTestCaseResults/' + runId;
-   let cachedData = localStorage.getItem(path);
+   let cachedData = null;
+   try {cachedData = localStorage.getItem(path);} catch(err){}   
    if(cachedData) {
       return (new Promise(function(resolve, reject) {
             resolve(JSON.parse(cachedData))
@@ -132,7 +135,8 @@ export function getTestCaseResults(runId) {
 
 export function getMachinesInvolved(runId) {
    let path = '/loaddb/getMachinesInvolved/' + runId;
-   let cachedData = localStorage.getItem(path);
+   let cachedData = null;
+   try {cachedData = localStorage.getItem(path);} catch(err){}   
    if(cachedData) {
       return (new Promise(function(resolve, reject) {
             resolve(JSON.parse(cachedData))
@@ -159,7 +163,8 @@ export function getMachinesInvolved(runId) {
 
 export function getGraphData(runId, machine, category, counter) {
    let path = '/loaddb/getGraphData/' + runId + '/' + machine + '/' + category +  '/' + counter;
-   let cachedData = localStorage.getItem(path);
+   let cachedData = null;
+   try {cachedData = localStorage.getItem(path);} catch(err){}   
    if(cachedData) {
       return (new Promise(function(resolve, reject) {
             resolve(JSON.parse(cachedData))
@@ -186,7 +191,8 @@ export function getGraphData(runId, machine, category, counter) {
 
 export function getSystemUnderTestResources(runId) {
    let path = '/loaddb/getSystemUnderTestResources/' + runId;
-   let cachedData = localStorage.getItem(path);
+   let cachedData = null;
+   try {cachedData = localStorage.getItem(path);} catch(err){}   
    if(cachedData) {
       return (new Promise(function(resolve, reject) {
             resolve(JSON.parse(cachedData))
@@ -213,7 +219,8 @@ export function getSystemUnderTestResources(runId) {
 
 export function getCounterCategories(runId) {
    let path = '/loaddb/getCounterCategories/' + runId;
-   let cachedData = localStorage.getItem(path);
+   let cachedData = null;
+   try {cachedData = localStorage.getItem(path);} catch(err){}   
    if(cachedData) {
       return (new Promise(function(resolve, reject) {
             resolve(JSON.parse(cachedData))
@@ -240,7 +247,8 @@ export function getCounterCategories(runId) {
 
 export function getAllCountersForCategory(runId, category) {
    let path = '/loaddb/getAllCountersForCategory/' + runId + '/' + category;
-   let cachedData = localStorage.getItem(path);
+   let cachedData = null;
+   try {cachedData = localStorage.getItem(path);} catch(err){}   
    if(cachedData) {
       return (new Promise(function(resolve, reject) {
             resolve(JSON.parse(cachedData))
@@ -267,7 +275,8 @@ export function getAllCountersForCategory(runId, category) {
 
 export function getRunInfo(command,runId) {
    let path = '/loaddb/' + command + '/' + runId;
-   let cachedData = localStorage.getItem(path);
+   let cachedData = null;
+   try {cachedData = localStorage.getItem(path);} catch(err){}   
    if(cachedData) {
       return (new Promise(function(resolve, reject) {
             resolve(JSON.parse(cachedData))
@@ -294,7 +303,8 @@ export function getRunInfo(command,runId) {
 
 export function getTestRunInformation(runId) {
    let path = '/loaddb/getTestRunInformation/' + runId;
-   let cachedData = localStorage.getItem(path);
+   let cachedData = null;
+   try {cachedData = localStorage.getItem(path);} catch(err){}   
    if(cachedData) {
       return new Promise(function(resolve, reject) {
          resolve(cachedData)
@@ -320,7 +330,8 @@ export function getTestRunInformation(runId) {
 
 export function getOverallResults(runId) {
    let path = '/loaddb/getOverallResults/' + runId;
-   let cachedData = localStorage.getItem(path);
+   let cachedData = null;
+   try {cachedData = localStorage.getItem(path);} catch(err){}   
    if(cachedData) {
       return (new Promise(function(resolve, reject) {
             resolve(JSON.parse(cachedData))

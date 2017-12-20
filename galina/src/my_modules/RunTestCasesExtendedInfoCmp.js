@@ -75,8 +75,8 @@ class RunTestCasesExtendedInfoCmp extends Component {
                     <td key={1} className="header-1">Total Tests</td>,
                     <td key={2} className="header-1">Main request</td>,
                     <td key={3} className="header-1">Count</td>,
-                    <td key={4} className="header-1">Average (ms)</td>,
-                    <td key={5} className="header-1">90th percentile (ms)</td>,
+                    <td key={4} className="header-1">Average (s)</td>,
+                    <td key={5} className="header-1">90th percentile (s)</td>,
                 ];
 
                 for (let i = 0; i < uniqueTestCases.length; i++ ) {

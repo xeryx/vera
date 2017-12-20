@@ -25,7 +25,7 @@ class TestCasePagesInfoCmp extends Component {
                <td key={0} className="header-1">URL</td>,
                <td key={1} className="header-1">Count</td>,
                <td key={2} className="header-1">Average</td>,
-               <td key={3} className="header-1">90th percentile (ms)</td>
+               <td key={3} className="header-1">90th percentile (s)</td>
             ];
 
             for (let i = 0; i < this.props.pagesInfo.length; i++) {
