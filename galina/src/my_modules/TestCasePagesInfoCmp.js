@@ -24,14 +24,16 @@ class TestCasePagesInfoCmp extends Component {
             pagesInfoHeaders = [
                <td key={0} className="header-1">URL</td>,
                <td key={1} className="header-1">Count</td>,
-               <td key={2} className="header-1">Average</td>
+               <td key={2} className="header-1">Average</td>,
+               <td key={3} className="header-1">90th percentile (ms)</td>
             ];
 
             for (let i = 0; i < this.props.pagesInfo.length; i++) {
                pagesInfoRows.push(<tr key={i}>
-                  <td className="row-data-1">{this.props.pagesInfo[i].RequestUri}</td>
+                  <td className="row-data-1-nolink">{this.props.pagesInfo[i].RequestUri}</td>
                   <td className="row-data-2">{this.props.pagesInfo[i].PageCount}</td>
                   <td className="row-data-2">{parseFloat(this.props.pagesInfo[i].Average).toFixed(2)}</td>
+                  <td className="row-data-2">{parseFloat(this.props.pagesInfo[i].Percentile90).toFixed(2)}</td>
                </tr>)
             }
 
@@ -60,6 +62,7 @@ class TestCasePagesInfoCmp extends Component {
             open={this.props.isOpen}
             onRequestClose={this.handleClose}
             children={<div style={{ "margin": "10px 0px 0px 0px" }}>{pagesInfoElem}</div>}
+            contentStyle={{maxWidth: 'none'}}
          />
 
 

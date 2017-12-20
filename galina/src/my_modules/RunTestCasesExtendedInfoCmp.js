@@ -58,7 +58,8 @@ class RunTestCasesExtendedInfoCmp extends Component {
                         {
                            url: pagesInfoByTestCase[uniqueTestCases[i]][mostSignificantCallIndex].RequestUri,
                            count: pagesInfoByTestCase[uniqueTestCases[i]][mostSignificantCallIndex].PageCount,
-                           average: pagesInfoByTestCase[uniqueTestCases[i]][mostSignificantCallIndex].Average
+                           average: pagesInfoByTestCase[uniqueTestCases[i]][mostSignificantCallIndex].Average,
+                           percentile90: pagesInfoByTestCase[uniqueTestCases[i]][mostSignificantCallIndex].Percentile90,
                         }
 
                   for(let k = 0; k < this.props.testCasesOverallInfo.length; k++) {
@@ -74,7 +75,8 @@ class RunTestCasesExtendedInfoCmp extends Component {
                     <td key={1} className="header-1">Total Tests</td>,
                     <td key={2} className="header-1">Main request</td>,
                     <td key={3} className="header-1">Count</td>,
-                    <td key={4} className="header-1">Average</td>,
+                    <td key={4} className="header-1">Average (ms)</td>,
+                    <td key={5} className="header-1">90th percentile (ms)</td>,
                 ];
 
                 for (let i = 0; i < uniqueTestCases.length; i++ ) {
@@ -87,7 +89,11 @@ class RunTestCasesExtendedInfoCmp extends Component {
                             <td className="row-data-1-nolink">{pagesInfoByTestCase[uniqueTestCases[i]]["mostSignificantCall"].url}</td>
                             <td className="row-data-2">{pagesInfoByTestCase[uniqueTestCases[i]]["mostSignificantCall"].count}</td>
                             <td className="row-data-2">{
-                                 parseFloat(pagesInfoByTestCase[uniqueTestCases[i]]["mostSignificantCall"].average).toFixed(2)}</td>
+                                 parseFloat(pagesInfoByTestCase[uniqueTestCases[i]]["mostSignificantCall"].average).toFixed(2)}
+                           </td>
+                           <td className="row-data-2">{
+                                 parseFloat(pagesInfoByTestCase[uniqueTestCases[i]]["mostSignificantCall"].percentile90).toFixed(2)}
+                           </td>
                         </tr>)
                 }
 
