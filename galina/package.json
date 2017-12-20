@@ -22,7 +22,7 @@
 
   "proxy": {
     "/": {
-        "target": "http://vmagent29.perftestmv.local"
+        "target": "http://loadtestdb.perftestmv.local"
     }
   }
 
