@@ -39,7 +39,7 @@ class RunTestCasesExtendedInfoCmp extends Component {
 
             if(this.props.testCasesPagesInfo.length > 0) {
 
-               let uniqueTestCases = utils.getUniqueKeyValuesInObjectArray(this.props.testCasesPagesInfo, "TestCaseName");
+               let uniqueTestCases = utils.getUniqueKeyValuesInObjectArray(this.props.testCasesPagesInfo, "TestCaseName").sort();             
                let pagesInfoByTestCase = utils.getObjectofArraysByUniqueKeyValues(this.props.testCasesPagesInfo, "TestCaseName",uniqueTestCases);
 
                for(let i = 0; i< uniqueTestCases.length; i++) {
