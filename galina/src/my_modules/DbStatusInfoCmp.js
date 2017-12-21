@@ -34,7 +34,8 @@ class DbStatusInfoCmp extends Component {
     }
 
     updateButtonClick() {
-        this.props.callback("updateDbState",{})
+      try {localStorage.clear();} catch(err){}
+      this.props.callback("updateDbState",{})
    }
 
 }          
