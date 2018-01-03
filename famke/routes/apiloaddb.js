@@ -15,7 +15,7 @@ router.route('/:par1?/:par2?/:par3?/:par4?/:par5?')
 
     exec(__dirname + '/../bin/LoadDbAccess.exe',paramsArray,  function(error, stdout, stderr) {
           if(!error) {
-              return res.json({"success":"true","request":stdout.trim()});
+              return res.send(stdout.trim());
           }
           else {
               return res.json({"success":"false", "error":error});

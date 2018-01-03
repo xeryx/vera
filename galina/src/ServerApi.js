@@ -1,12 +1,9 @@
 //Function that retrieves the contents of the response json
-export function getRequestResponseContent(requestId, requestPath) {
-   return(
-        fetch('/requests/' + requestId.request + '.json', {
-            method: "get",
-        })
-        .then(response => response.json())
-        .then(responseJson => {try{localStorage.setItem(requestPath,JSON.stringify(responseJson))}catch(err){}; return responseJson})
-    );
+function saveInLocalStorage(dataJson, requestPath) {
+   try{
+      localStorage.setItem(requestPath,JSON.stringify(dataJson))
+   }
+   catch(err){}; 
 };
 
 export function testDbConnection() {
@@ -19,10 +16,11 @@ export function testDbConnection() {
         .then(responseJson => new Promise(
             function(resolve, reject) {
                 if(responseJson.success !== "false") {
-                    resolve(getRequestResponseContent(responseJson, path))    
+                  saveInLocalStorage(responseJson,path);
+                  resolve(responseJson);
                 }
                 else {
-                    reject(Error(JSON.stringify(responseJson.error)));
+                  reject(Error(JSON.stringify(responseJson.error)));
                 }
             })
         )
@@ -38,11 +36,12 @@ export function getAllTestRuns() {
         .then(response => response.json())
         .then(responseJson => new Promise(
             function(resolve, reject) {
-                if(responseJson.success !== "false") {
-                    resolve(getRequestResponseContent(responseJson, path))    
+               if(responseJson.success !== "false") {
+                  saveInLocalStorage(responseJson,path);
+                  resolve(responseJson);
                 }
                 else {
-                    reject(Error(JSON.stringify(responseJson.error)));
+                  reject(Error(JSON.stringify(responseJson.error)));
                 }
             })
         )
@@ -66,11 +65,12 @@ export function getPageResultsByTestCase(runId, testCaseName) {
         .then(response => response.json())
         .then(responseJson => new Promise(
             function(resolve, reject) {
-                if(responseJson.success !== "false") {
-                    resolve(getRequestResponseContent(responseJson, path))    
+               if(responseJson.success !== "false") {
+                  saveInLocalStorage(responseJson,path);
+                  resolve(responseJson);
                 }
                 else {
-                    reject(Error(JSON.stringify(responseJson.error)));
+                  reject(Error(JSON.stringify(responseJson.error)));
                 }
             })
         ) 
@@ -94,11 +94,12 @@ export function getPageResults(runId) {
         .then(response => response.json())
         .then(responseJson => new Promise(
             function(resolve, reject) {
-                if(responseJson.success !== "false") {
-                    resolve(getRequestResponseContent(responseJson, path))    
+               if(responseJson.success !== "false") {
+                  saveInLocalStorage(responseJson,path);
+                  resolve(responseJson);
                 }
                 else {
-                    reject(Error(JSON.stringify(responseJson.error)));
+                  reject(Error(JSON.stringify(responseJson.error)));
                 }
             })
         ) 
@@ -122,11 +123,12 @@ export function getTestCaseResults(runId) {
         .then(response => response.json())
         .then(responseJson => new Promise(
             function(resolve, reject) {
-                if(responseJson.success !== "false") {
-                    resolve(getRequestResponseContent(responseJson, path))    
+               if(responseJson.success !== "false") {
+                  saveInLocalStorage(responseJson,path);
+                  resolve(responseJson);
                 }
                 else {
-                    reject(Error(JSON.stringify(responseJson.error)));
+                  reject(Error(JSON.stringify(responseJson.error)));
                 }
             })
         )   
@@ -150,11 +152,12 @@ export function getMachinesInvolved(runId) {
         .then(response => response.json())
         .then(responseJson => new Promise(
             function(resolve, reject) {
-                if(responseJson.success !== "false") {
-                    resolve(getRequestResponseContent(responseJson,path))    
+               if(responseJson.success !== "false") {
+                  saveInLocalStorage(responseJson,path);
+                  resolve(responseJson);
                 }
                 else {
-                    reject(Error(JSON.stringify(responseJson.error)));
+                  reject(Error(JSON.stringify(responseJson.error)));
                 }
             })
         )  
@@ -178,11 +181,12 @@ export function getGraphData(runId, machine, category, counter) {
         .then(response => response.json())
         .then(responseJson => new Promise(
             function(resolve, reject) {
-                if(responseJson.success !== "false") {
-                    resolve(getRequestResponseContent(responseJson, path))    
+               if(responseJson.success !== "false") {
+                  saveInLocalStorage(responseJson,path);
+                  resolve(responseJson);
                 }
                 else {
-                    reject(Error(JSON.stringify(responseJson.error)));
+                  reject(Error(JSON.stringify(responseJson.error)));
                 }
             })
         )
@@ -206,11 +210,12 @@ export function getSystemUnderTestResources(runId) {
         .then(response => response.json())
         .then(responseJson => new Promise(
             function(resolve, reject) {
-                if(responseJson.success !== "false") {
-                    resolve(getRequestResponseContent(responseJson, path))    
+               if(responseJson.success !== "false") {
+                  saveInLocalStorage(responseJson,path);
+                  resolve(responseJson);
                 }
                 else {
-                    reject(Error(JSON.stringify(responseJson.error)));
+                  reject(Error(JSON.stringify(responseJson.error)));
                 }
             })
         )
@@ -234,11 +239,12 @@ export function getCounterCategories(runId) {
         .then(response => response.json())
         .then(responseJson => new Promise(
             function(resolve, reject) {
-                if(responseJson.success !== "false") {
-                    resolve(getRequestResponseContent(responseJson, path))    
+               if(responseJson.success !== "false") {
+                  saveInLocalStorage(responseJson,path);
+                  resolve(responseJson);
                 }
                 else {
-                    reject(Error(JSON.stringify(responseJson.error)));
+                  reject(Error(JSON.stringify(responseJson.error)));
                 }
             })
         )
@@ -262,11 +268,12 @@ export function getAllCountersForCategory(runId, category) {
         .then(response => response.json())
         .then(responseJson => new Promise(
             function(resolve, reject) {
-                if(responseJson.success !== "false") {
-                    resolve(getRequestResponseContent(responseJson, path))    
+               if(responseJson.success !== "false") {
+                  saveInLocalStorage(responseJson,path);
+                  resolve(responseJson);
                 }
                 else {
-                    reject(Error(JSON.stringify(responseJson.error)));
+                  reject(Error(JSON.stringify(responseJson.error)));
                 }
             })
         )  
@@ -290,11 +297,12 @@ export function getRunInfo(command,runId) {
         .then(response => response.json())
         .then(responseJson => new Promise(
             function(resolve, reject) {
-                if(responseJson.success !== "false") {
-                    resolve(getRequestResponseContent(responseJson,path))    
+               if(responseJson.success !== "false") {
+                  saveInLocalStorage(responseJson,path);
+                  resolve(responseJson);
                 }
                 else {
-                    reject(Error(JSON.stringify(responseJson.error)));
+                  reject(Error(JSON.stringify(responseJson.error)));
                 }
             })
         )
@@ -317,11 +325,12 @@ export function getTestRunInformation(runId) {
         .then(response => response.json())
         .then(responseJson => new Promise(
             function(resolve, reject) {
-                if(responseJson.success !== "false") {
-                    resolve(getRequestResponseContent(responseJson, path))    
+               if(responseJson.success !== "false") {
+                  saveInLocalStorage(responseJson,path);
+                  resolve(responseJson);
                 }
                 else {
-                    reject(Error(JSON.stringify(responseJson.error)));
+                  reject(Error(JSON.stringify(responseJson.error)));
                 }
             })
         )    
@@ -345,11 +354,12 @@ export function getOverallResults(runId) {
         .then(response => response.json())
         .then(responseJson => new Promise(
             function(resolve, reject) {
-                if(responseJson.success !== "false") {
-                    resolve(getRequestResponseContent(responseJson, path))    
+               if(responseJson.success !== "false") {
+                  saveInLocalStorage(responseJson,path);
+                  resolve(responseJson);
                 }
                 else {
-                    reject(Error(JSON.stringify(responseJson.error)));
+                  reject(Error(JSON.stringify(responseJson.error)));
                 }
             })
         )    
