@@ -32,8 +32,8 @@ class TestCasePagesInfoCmp extends Component {
                pagesInfoRows.push(<tr key={i}>
                   <td className="row-data-1-nolink">{this.props.pagesInfo[i].RequestUri}</td>
                   <td className="row-data-2">{this.props.pagesInfo[i].PageCount}</td>
-                  <td className="row-data-2">{parseFloat(this.props.pagesInfo[i].Average).toFixed(2)}</td>
-                  <td className="row-data-2">{parseFloat(this.props.pagesInfo[i].Percentile90).toFixed(2)}</td>
+                  <td className="row-data-2">{parseFloat(this.props.pagesInfo[i].Average).toFixed(3)}</td>
+                  <td className="row-data-2">{parseFloat(this.props.pagesInfo[i].Percentile90).toFixed(3)}</td>
                </tr>)
             }
 
