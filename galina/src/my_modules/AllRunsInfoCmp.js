@@ -57,7 +57,7 @@ class AllRunsInfoCmp extends Component {
                             value={this.props.menuValue} 
                             onChange={this.handleChangeMenu}
                             disabled={menuDisabled}
-                            autoWidth={false}
+                            autoWidth={true}
                             >
                         {runItems}
                         </DropDownMenu>
