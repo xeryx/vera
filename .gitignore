@@ -1,11 +1,12 @@
 npm-debug.log
 galina/node_modules/
 galina/build/
+galina/package.json
 
 famke/npm-debug.log
 famke/node_modules/
 famke/public
 
-galina/LoadTests.aspx
-galina/MasterPage.Master
-galina/package.json
+nelia/node_modules/
+nelia/build/
+nelia/package.json

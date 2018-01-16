@@ -5,16 +5,13 @@ var bodyParser = require('body-parser');
 
 var apihome = require('./routes/apihome');
 var apiloaddb = require('./routes/apiloaddb');
+var apiloadrun = require('./routes/apiloadrun');
 
-var default_router = function(req, res)   {
-     res.status(500).send("Error");
-}
 
 var app = express(); 
 
 //Serve static react build, once done
 app.use(express.static('public'))
-
 
 
 var server = require('http').Server(app);
@@ -38,6 +35,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 //Mount routers
 app.use('/loaddb/', apiloaddb);
+app.use('/loadrun/', apiloadrun);
 app.use('/', apihome);
 
 
