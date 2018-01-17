@@ -2,6 +2,26 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import LoadTestInfoApp from './apps/LoadTestInfoApp';
 
+function getParam(parm) {
+   let query = window.top.location.search.substring(1);
+   let vars = query.split("&");
+   for (let i = 0; i < vars.length; i++) {
+      let pair = vars[i].split("=");
+       if (pair[0].toLowerCase() === parm.toLowerCase()) {
+         let pair = vars[i].split("=");
+           if (pair[0].toLowerCase() === parm.toLowerCase()) {
+               return pair[1];
+           }
+       }
+   }
+   return (false);
+}
+
+let runId = getParam("runid");
+if (!runId) {
+   runId = "";
+}
+
 let heading = "";
 if(window.self === window.top) {
    heading = 
@@ -22,6 +42,6 @@ else {
 
 ReactDOM.render(<div>
                 {heading}
-                <LoadTestInfoApp/>   
+                <LoadTestInfoApp defaultSelectedRunId={runId}/>   
     </div>, document.getElementById('root'));
 

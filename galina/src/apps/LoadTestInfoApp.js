@@ -428,8 +428,21 @@ class LoadTestInfoApp extends Component {
       this.childrenCallback("updateDbState")
          .then(response => this.childrenCallback("updateAllRunsInfo"))
          .then(response => {
-            this.childrenCallback("updateRunTestCasesExtendedInfo",response[0].runID);
-            this.childrenCallback("updateRunMachineExtendedInfo",response[0].runID);
+            let defaultRunPosition = 0;
+            if(this.props.defaultSelectedRunId !== "") {
+               for (let i = 0; i < response.length; i++ ) {
+                  if(response[i].runID === this.props.defaultSelectedRunId) {
+                     defaultRunPosition = i;
+                  }
+               }
+            }
+            this.setState({
+               selectedRunId: this.props.defaultSelectedRunId,
+               selectedRunIndex: defaultRunPosition,
+            });
+
+            this.childrenCallback("updateRunTestCasesExtendedInfo",response[defaultRunPosition].runID);
+            this.childrenCallback("updateRunMachineExtendedInfo",response[defaultRunPosition].runID);
          })
          .catch(error => alert("Error: " + error.message + "\n" + error.stack))
    }

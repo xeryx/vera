@@ -43,6 +43,7 @@ class AllRunsInfoCmp extends Component {
                 selectedRunGeneralInfoTable = <table><tbody>
                 <tr><td className="row-data-1-nolink">Users</td><td className="row-data-2">{selectedObj.users}</td></tr>
                 <tr><td className="row-data-1-nolink">Duration (mins)</td><td className="row-data-2">{durationMins}</td></tr>
+                <tr><td className="row-data-1-nolink">Test ID</td><td className="row-data-2">{selectedObj.runID}</td></tr>
                 <tr><td className="row-data-1-nolink">Start Time</td><td className="row-data-2">{selectedObj.startTime}</td></tr>
                 <tr><td className="row-data-1-nolink">End Time</td><td className="row-data-2">{selectedObj.endTime}</td></tr>
                 <tr><td className="row-data-1-nolink">Description</td><td className="row-data-2">{selectedObj.description}</td></tr>
