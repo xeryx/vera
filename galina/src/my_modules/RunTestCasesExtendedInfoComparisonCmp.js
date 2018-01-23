@@ -46,7 +46,7 @@ class RunTestCasesExtendedInfoComparisonCmp extends Component {
                            url: pagesInfoByTestCase[uniqueTestCases[i]][mostSignificantCallIndex].RequestUri,
                            count: pagesInfoByTestCase[uniqueTestCases[i]][mostSignificantCallIndex].PageCount,
                            average: pagesInfoByTestCase[uniqueTestCases[i]][mostSignificantCallIndex].Average,
-                           percentile90: pagesInfoByTestCase[uniqueTestCases[i]][mostSignificantCallIndex].Percentile90,
+                           percentile95: pagesInfoByTestCase[uniqueTestCases[i]][mostSignificantCallIndex].Percentile95,
                         }
 
                   for(let k = 0; k < this.props.testCasesOverallInfo.length; k++) {
@@ -79,7 +79,7 @@ class RunTestCasesExtendedInfoComparisonCmp extends Component {
                            url: pagesInfoByTestCase_2[uniqueTestCases_2[i]][mostSignificantCallIndex].RequestUri,
                            count: pagesInfoByTestCase_2[uniqueTestCases_2[i]][mostSignificantCallIndex].PageCount,
                            average: pagesInfoByTestCase_2[uniqueTestCases_2[i]][mostSignificantCallIndex].Average,
-                           percentile90: pagesInfoByTestCase_2[uniqueTestCases_2[i]][mostSignificantCallIndex].Percentile90,
+                           percentile95: pagesInfoByTestCase_2[uniqueTestCases_2[i]][mostSignificantCallIndex].Percentile95,
                         }
 
                   for(let k = 0; k < this.props.testCasesOverallInfo_2.length; k++) {
@@ -90,16 +90,17 @@ class RunTestCasesExtendedInfoComparisonCmp extends Component {
                               
                }
 
-
                testCasesInfoHeaders = [
-                    <td key={0} className="header-1">Test Case Name</td>,
-                    <td key={3} className="header-1">Main request</td>,
-                    <td key={6} className="header-1">Avg 1 (s)</td>,
-                    <td key={7} className="header-1">Avg 2 (s)</td>,
-                    <td key={8} className="header-1">90th %ile 1 (s)</td>,
-                    <td key={9} className="header-1">90th %ile 2 (s)</td>,
-                    <td key={4} className="header-1">Count 1</td>,
-                    <td key={5} className="header-1">Count 2</td>,                ];
+                  <td key={0} className="header-1">Test Case Name</td>,
+                  <td key={1} className="header-1">Main request</td>,
+                  <td key={2} className="header-1">Avg 1 (s)</td>,
+                  <td key={3} className="header-1">Avg 2 (s)</td>,
+                  <td key={4} className="header-1">Delta</td>,
+                  <td key={5} className="header-1">95th %ile 1</td>,
+                  <td key={6} className="header-1">95th %ile 2</td>,
+                  <td key={7} className="header-1">Count 1</td>,
+                  <td key={8} className="header-1">Count 2</td>,                
+               ];
 
                for (let i = 0; i < uniqueTestCases.length; i++ ) {
 
@@ -109,7 +110,8 @@ class RunTestCasesExtendedInfoComparisonCmp extends Component {
                      if(urlString === pagesInfoByTestCase_2[uniqueTestCases[i]]["mostSignificantCall"].url ) {
 
                         urlString = urlString.substr(urlString.lastIndexOf('/'))
-
+                        let average_1 = pagesInfoByTestCase[uniqueTestCases[i]]["mostSignificantCall"].average;
+                        let average_2 = pagesInfoByTestCase_2[uniqueTestCases[i]]["mostSignificantCall"].average;
 
                         testCasesInfoRows.push(<tr key={i}>
                                  <td className="row-data-1-nolink">
@@ -117,16 +119,19 @@ class RunTestCasesExtendedInfoComparisonCmp extends Component {
                                  </td>
                                  <td className="row-data-1-nolink">{urlString}</td>
                                  <td className="row-data-2">{
-                                    parseFloat(pagesInfoByTestCase[uniqueTestCases[i]]["mostSignificantCall"].average).toFixed(3)}
+                                    parseFloat(average_1).toFixed(3)}
                                  </td>
                                  <td className="row-data-2">{
-                                    parseFloat(pagesInfoByTestCase_2[uniqueTestCases[i]]["mostSignificantCall"].average).toFixed(3)}
-                                 </td>      
+                                    parseFloat(average_2).toFixed(3)}
+                                 </td>    
                                  <td className="row-data-2">{
-                                    parseFloat(pagesInfoByTestCase[uniqueTestCases[i]]["mostSignificantCall"].percentile90).toFixed(3)}
+                                    parseFloat(average_2-average_1).toFixed(3)}
+                                 </td> 
+                                 <td className="row-data-2">{
+                                    parseFloat(pagesInfoByTestCase[uniqueTestCases[i]]["mostSignificantCall"].percentile95).toFixed(3)}
                                  </td>
                                  <td className="row-data-2">{
-                                    parseFloat(pagesInfoByTestCase_2[uniqueTestCases[i]]["mostSignificantCall"].percentile90).toFixed(3)}
+                                    parseFloat(pagesInfoByTestCase_2[uniqueTestCases[i]]["mostSignificantCall"].percentile95).toFixed(3)}
                                  </td>                              
                                  <td className="row-data-2">{pagesInfoByTestCase[uniqueTestCases[i]]["mostSignificantCall"].count}</td>
                                  <td className="row-data-2">{pagesInfoByTestCase_2[uniqueTestCases[i]]["mostSignificantCall"].count}</td>                              
@@ -151,7 +156,6 @@ class RunTestCasesExtendedInfoComparisonCmp extends Component {
 
                 componentContent = 
                 <div> 
-                    {/*loadInfoButton*/}
                     <div style={{"margin":"10px 0px 0px 0px"}}>
                         {testCasesInfoElem}
                     </div>
