@@ -2,10 +2,8 @@ import React, { Component } from 'react';
 import CircularProgress from 'material-ui/CircularProgress';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
-import Toggle from 'material-ui/Toggle';
-//import Divider from 'material-ui/Divider';
 
-class AllRunsInfoCmp extends Component {
+class AllRunsInfoForComparisonCmp extends Component {
 
    render() {  
 
@@ -54,7 +52,7 @@ class AllRunsInfoCmp extends Component {
             
                 componentContent = 
                     <div>
-                    <div className="section-title">Load test runs:</div>
+                    <div className="section-title">Run for comparison:</div>
                     <div style={{float:"left"}}>    
                         <DropDownMenu 
                             value={this.props.menuValue} 
@@ -68,15 +66,6 @@ class AllRunsInfoCmp extends Component {
                     <div style={{float:"left", padding:"10px 0px 0px 0px"}}>
                         {selectedRunGeneralInfoTable}
                     </div>
-                    <div style={{float:"right", margin:"10px"}}>    
-                        <Toggle 
-                            label="Compare mode"
-                            onToggle={this.handleCompareToggle}
-                            labelPosition = "right"
-                            labelStyle={{ fontSize:"13px"}}
-                            >
-                        </Toggle>
-                    </div>
                     <div style={{ clear:"both"}}></div>
                 </div>
             }
@@ -87,9 +76,8 @@ class AllRunsInfoCmp extends Component {
         
     }
 
-    handleChangeMenu = (event, index, value) => this.props.callback("runMenuChange", value);
-    handleCompareToggle = (event, isInputChecked) => this.props.callback("compareToggleChange", isInputChecked);
+    handleChangeMenu = (event, index, value) => this.props.callback("runMenuChange_comparison", value);
 }       
 
 
-export default AllRunsInfoCmp;
+export default AllRunsInfoForComparisonCmp;

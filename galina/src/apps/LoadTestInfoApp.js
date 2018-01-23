@@ -14,11 +14,13 @@ import {
    getSystemUnderTestResources
 } from '../ServerApi'
 import AllRunsInfoCmp from '../my_modules/AllRunsInfoCmp'
+import AllRunsInfoForComparisonCmp from '../my_modules/AllRunsInfoForComparisonCmp'
 import DbStatusInfoCmp from "../my_modules/DbStatusInfoCmp"
 import RunTestCasesExtendedInfoCmp from "../my_modules/RunTestCasesExtendedInfoCmp"
 import TestCasePagesInfoCmp from "../my_modules/TestCasePagesInfoCmp"
 import MachinesExtendedInfoCmp from "../my_modules/MachinesExtendedInfoCmp"
 import MachinePlotCmp from "../my_modules/MachinePlotCmp"
+import RunTestCasesExtendedInfoComparisonCmp from "../my_modules/RunTestCasesExtendedInfoComparisonCmp"
 
 
 class LoadTestInfoApp extends Component {
@@ -31,10 +33,21 @@ class LoadTestInfoApp extends Component {
 
       this.state = {
          isDbOnline: false,
+         comparisonOn:false,
+
          allRunsInfo: [],
 
          selectedRunTestCaseInfo: [],
          selectedRunTestCaseExtendedInfo: [],
+
+         selectedRunTestCaseInfo_comparison: [],
+         selectedRunTestCaseExtendedInfo_comparison: [],
+
+         selectedRunId: "",
+         selectedRunIndex: 0,
+
+         selectedRunId_comparison: "",
+         selectedRunIndex_comparison: 0,
 
          selectedTestCase: "",
          selectedTestCasePageInfo: [],
@@ -42,9 +55,6 @@ class LoadTestInfoApp extends Component {
          selectedMachine: "",
          selectedMachinePlotData: {},
          
-         selectedRunId: "",
-         selectedRunIndex: 0,
-
          testCasePagesDialogOpen: false,
          machinePlotDialogOpen: false,
 
@@ -75,11 +85,29 @@ class LoadTestInfoApp extends Component {
          menuValue={this.state.selectedRunIndex}
       />
 
-      let runTestCasesExtendedInfo = <RunTestCasesExtendedInfoCmp
+      let allRunsInfoForComparisonCmp = <AllRunsInfoForComparisonCmp
+         isDbOnline={this.state.isDbOnline}
+         runsInfo={this.state.allRunsInfo}
+         callback={this.childrenCallback}
+         menuValue={this.state.selectedRunIndex_comparison}
+      />
+
+      let runTestCasesExtendedInfoCmp = <RunTestCasesExtendedInfoCmp
          testCasesPagesInfo={this.state.selectedRunTestCaseExtendedInfo}
          testCasesOverallInfo={this.state.selectedRunTestCaseInfo}
          isWaiting={this.state.componentWaiting["RunTestCasesExtendedInfoCmp"]}
          runId={this.state.selectedRunId}
+         callback={this.childrenCallback}
+      />  
+
+      let runTestCasesExtendedInfoComparisonCmp = <RunTestCasesExtendedInfoComparisonCmp
+         testCasesPagesInfo={this.state.selectedRunTestCaseExtendedInfo}
+         testCasesOverallInfo={this.state.selectedRunTestCaseInfo}
+         testCasesPagesInfo_2={this.state.selectedRunTestCaseExtendedInfo_comparison}
+         testCasesOverallInfo_2={this.state.selectedRunTestCaseInfo_comparison}         
+         isWaiting={this.state.componentWaiting["RunTestCasesExtendedInfoComparisonCmp"]}
+         runId={this.state.selectedRunId}
+         runId_2={this.state.selectedRunId_comparison}
          callback={this.childrenCallback}
       />      
 
@@ -111,21 +139,31 @@ class LoadTestInfoApp extends Component {
             <div style={{ margin: "20px 0px 10px 0px" }}>
                {dbStatusCmp}
             </div>
-            <div style={{ margin: "10px 00px 10px 0px" }}>
+            <div style={{ margin: "10px 00px 10px 0px"}}>
                {allRunsInfoCmp}
+            </div>  
+            <div style={{ display: this.state.comparisonOn ? "none":"inline" }}>
+               <div style={{ margin: "10px 00px 10px 0px" }}>
+                  {runTestCasesExtendedInfoCmp}
+               </div>            
+               <div style={{ margin: "35px 00px 10px 0px" }}>
+                  {runMachinesExtendedInfo}
+               </div>
+               <div style={{ margin: "20px 0px 10px 0px" }}>
+                  {testCasePageDialog}
+               </div>
+               <div style={{ margin: "20px 0px 10px 0px" }}>
+                  {machinePlotDialog}
+               </div>            
             </div>
-            <div style={{ margin: "10px 00px 10px 0px" }}>
-               {runTestCasesExtendedInfo}
+            <div style={{ display: this.state.comparisonOn ? "inline":"none" }}>
+               <div style={{ margin: "20px 00px 10px 0px" }}>
+                  {allRunsInfoForComparisonCmp}   
+               </div> 
+               <div style={{ margin: "10px 00px 10px 0px" }}>
+                  {runTestCasesExtendedInfoComparisonCmp}
+               </div>            
             </div>
-            <div style={{ margin: "35px 00px 10px 0px" }}>
-               {runMachinesExtendedInfo}
-            </div>
-            <div style={{ margin: "20px 0px 10px 0px" }}>
-               {testCasePageDialog}
-            </div>
-            <div style={{ margin: "20px 0px 10px 0px" }}>
-               {machinePlotDialog}
-            </div>            
          </div></MuiThemeProvider>
       )
    }
@@ -157,12 +195,24 @@ class LoadTestInfoApp extends Component {
                      })
             );
 
-            case "updateRunTestCasesExtendedInfo":
+         case "updateRunTestCasesExtendedInfo":
             this.changeWaitingState("RunTestCasesExtendedInfoCmp", true);
+            this.changeWaitingState("RunTestCasesExtendedInfoComparisonCmp", true)
             return(
                this.getRunTestCasesExtendedInfo(data)
                   .then(response => {
                      this.changeWaitingState("RunTestCasesExtendedInfoCmp", false)
+                     this.changeWaitingState("RunTestCasesExtendedInfoComparisonCmp", false)
+                     return response;
+                  })
+            );
+
+         case "updateRunTestCasesExtendedInfoComparison":
+            this.changeWaitingState("RunTestCasesExtendedInfoComparisonCmp", true)
+            return(
+               this.getTwoRunsTestCasesExtendedInfo(data)
+                  .then(response => {
+                     this.changeWaitingState("RunTestCasesExtendedInfoComparisonCmp", false)
                      return response;
                   })
             );
@@ -220,12 +270,36 @@ class LoadTestInfoApp extends Component {
             this.clearState();
             this.setState({
                selectedRunIndex: data,
-               selectedRunId: this.state.allRunsInfo[data].runID,
+               selectedRunId: this.state.allRunsInfo[data].runID
             });
             this.childrenCallback("updateRunTestCasesExtendedInfo", this.state.allRunsInfo[data].runID);
             this.childrenCallback("updateRunMachineExtendedInfo", this.state.allRunsInfo[data].runID);
+
+            if(!this.state.comparisonOn) {
+               this.setState({
+                  selectedRunIndex_comparison: data,
+                  selectedRunId_comparison: this.state.allRunsInfo[data].runID,
+               });
+            } 
            break;
 
+         case "runMenuChange_comparison":
+            this.setState({
+               selectedRunIndex_comparison: data,
+               selectedRunId_comparison: this.state.allRunsInfo[data].runID,
+            });
+            if(this.state.comparisonOn) {
+               this.childrenCallback("updateRunTestCasesExtendedInfoComparison",[ this.state.selectedRunId, this.state.allRunsInfo[data].runID]);
+            }
+           break;
+         case "compareToggleChange":
+            this.setState({
+               comparisonOn: data,
+            });
+            if(data) {
+               this.childrenCallback("updateRunTestCasesExtendedInfoComparison",[ this.state.selectedRunId, this.state.selectedRunId_comparison]);
+            }
+           break;
          case "closeTestCasePagesDialog":
             this.closeTestCaseDialog()
             break;
@@ -235,7 +309,7 @@ class LoadTestInfoApp extends Component {
             break;
 
          default:
-            break;            
+            break;
       }
    }
 
@@ -300,6 +374,29 @@ class LoadTestInfoApp extends Component {
                   this.setState({
                      selectedRunTestCaseExtendedInfo: responses[1].data,
                      selectedRunTestCaseInfo: responses[0].data
+                  });
+               }
+            })
+            .catch(error => alert("Error: " + error.message + "\n" + error.stack))
+      )
+   }
+
+   getTwoRunsTestCasesExtendedInfo = function (runIds) {
+
+      let promise1 = getTestCaseResults(runIds[0]);
+      let promise2 = getPageResults(runIds[0]);
+      let promise3 = getTestCaseResults(runIds[1]);
+      let promise4 = getPageResults(runIds[1]);
+      
+      return (Promise.all([promise1, promise2, promise3, promise4])
+         .then(responses => {
+            if ((responses[0].success === "true") && (responses[1].success === "true")
+            &&  (responses[2].success === "true") && (responses[3].success === "true")) {
+                  this.setState({
+                     selectedRunTestCaseExtendedInfo: responses[1].data,
+                     selectedRunTestCaseInfo: responses[0].data,
+                     selectedRunTestCaseExtendedInfo_comparison: responses[3].data,
+                     selectedRunTestCaseInfo_comparison: responses[2].data,
                   });
                }
             })
@@ -437,8 +534,10 @@ class LoadTestInfoApp extends Component {
                }
             }
             this.setState({
-               selectedRunId: this.props.defaultSelectedRunId,
+               selectedRunId: response[defaultRunPosition].runID,               
                selectedRunIndex: defaultRunPosition,
+               selectedRunId_comparison : response[defaultRunPosition].runID,
+               selectedRunIndex_comparison: defaultRunPosition,
             });
 
             this.childrenCallback("updateRunTestCasesExtendedInfo",response[defaultRunPosition].runID);
