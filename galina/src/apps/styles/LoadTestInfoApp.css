@@ -12,6 +12,28 @@ body {
     font-size: 16px;
 }
 
+.row-data-2-cmp {
+   padding: 3px 10px 3px 5px;
+   background-color:rgb(47, 66, 53);
+   color:rgb(167, 180, 130);
+
+   font-size: 16px;
+}
+
+.row-data-delta-green {
+   padding: 3px 10px 3px 5px;
+   background-color:rgb(57, 128, 78);
+   font-size: 16px;
+   color:rgb(187, 185, 185);
+}
+
+.row-data-delta-red {
+   padding: 3px 10px 3px 5px;
+   background-color:rgb(85, 19, 2);
+   font-size: 16px;
+   color:rgb(187, 185, 185);
+}
+
 .row-data-1 {
     padding: 3px 10px 3px 5px;
     color:white;

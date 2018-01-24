@@ -112,6 +112,9 @@ class RunTestCasesExtendedInfoComparisonCmp extends Component {
                         urlString = urlString.substr(urlString.lastIndexOf('/'))
                         let average_1 = pagesInfoByTestCase[uniqueTestCases[i]]["mostSignificantCall"].average;
                         let average_2 = pagesInfoByTestCase_2[uniqueTestCases[i]]["mostSignificantCall"].average;
+                        let averageDelta = average_1-average_2;
+                        let deltaClassName = (averageDelta > 0)?"row-data-delta-red":"row-data-delta-green";
+
 
                         testCasesInfoRows.push(<tr key={i}>
                                  <td className="row-data-1-nolink">
@@ -121,20 +124,20 @@ class RunTestCasesExtendedInfoComparisonCmp extends Component {
                                  <td className="row-data-2">{
                                     parseFloat(average_1).toFixed(3)}
                                  </td>
-                                 <td className="row-data-2">{
+                                 <td className="row-data-2-cmp">{
                                     parseFloat(average_2).toFixed(3)}
                                  </td>    
-                                 <td className="row-data-2">{
-                                    parseFloat(average_2-average_1).toFixed(3)}
+                                 <td className={deltaClassName}>{
+                                    parseFloat(averageDelta).toFixed(3)}
                                  </td> 
                                  <td className="row-data-2">{
                                     parseFloat(pagesInfoByTestCase[uniqueTestCases[i]]["mostSignificantCall"].percentile95).toFixed(3)}
                                  </td>
-                                 <td className="row-data-2">{
+                                 <td className="row-data-2-cmp">{
                                     parseFloat(pagesInfoByTestCase_2[uniqueTestCases[i]]["mostSignificantCall"].percentile95).toFixed(3)}
                                  </td>                              
                                  <td className="row-data-2">{pagesInfoByTestCase[uniqueTestCases[i]]["mostSignificantCall"].count}</td>
-                                 <td className="row-data-2">{pagesInfoByTestCase_2[uniqueTestCases[i]]["mostSignificantCall"].count}</td>                              
+                                 <td className="row-data-2-cmp">{pagesInfoByTestCase_2[uniqueTestCases[i]]["mostSignificantCall"].count}</td>                              
                            </tr>)
 
                      }
