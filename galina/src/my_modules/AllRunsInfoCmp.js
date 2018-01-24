@@ -7,6 +7,11 @@ import Toggle from 'material-ui/Toggle';
 
 class AllRunsInfoCmp extends Component {
 
+   constructor(props) {
+      super(props); 
+      this.state = {compareEnabled:false};
+  }
+
    render() {  
 
         let runItems = [];
@@ -41,15 +46,17 @@ class AllRunsInfoCmp extends Component {
                 } else {
                     durationMins = selectedObj.runDuration;
                 }
-        
+
                 selectedRunGeneralInfoTable = <table><tbody>
                 <tr><td className="row-data-1-nolink">Users</td><td className="row-data-2">{selectedObj.users}</td></tr>
                 <tr><td className="row-data-1-nolink">Duration (mins)</td><td className="row-data-2">{durationMins}</td></tr>
-                <tr><td className="row-data-1-nolink">Test ID</td><td className="row-data-2">{selectedObj.runID}</td></tr>
+                <tr><td className="row-data-1-nolink">Test ID</td><td className="row-data-2" onClick={(e) => this.handleIdClick()}>{selectedObj.runID}</td></tr>
                 <tr><td className="row-data-1-nolink">Start Time</td><td className="row-data-2">{selectedObj.startTime}</td></tr>
                 <tr><td className="row-data-1-nolink">End Time</td><td className="row-data-2">{selectedObj.endTime}</td></tr>
                 <tr><td className="row-data-1-nolink">Description</td><td className="row-data-2">{selectedObj.description}</td></tr>
-                <tr><td className="row-data-1-nolink">Analysis</td><td className="row-data-2">{selectedObj.comment.replace("[PERFTESTMV\\loadtester]","")}</td></tr>
+                <tr><td className="row-data-1-nolink">Analysis</td><td className="row-data-2" style={{maxWidth:"350px"}}>
+                                                               {selectedObj.comment.replace("[PERFTESTMV\\loadtester]","")}
+                                                               </td></tr>
                 </tbody></table>
             
                 componentContent = 
@@ -68,7 +75,7 @@ class AllRunsInfoCmp extends Component {
                     <div style={{float:"left", padding:"10px 0px 0px 0px"}}>
                         {selectedRunGeneralInfoTable}
                     </div>
-                    <div style={{float:"right", margin:"10px"}}>    
+                    <div style={{float:"right", margin:"10px", display:(this.state.compareEnabled?"inline":"none")}}>    
                         <Toggle 
                             label="Compare mode"
                             onToggle={this.handleCompareToggle}
@@ -89,6 +96,7 @@ class AllRunsInfoCmp extends Component {
 
     handleChangeMenu = (event, index, value) => this.props.callback("runMenuChange", value);
     handleCompareToggle = (event, isInputChecked) => this.props.callback("compareToggleChange", isInputChecked);
+    handleIdClick = () => this.setState({ compareEnabled:!this.state.compareEnabled});     
 }       
 
 

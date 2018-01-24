@@ -143,7 +143,7 @@ class RunTestCasesExtendedInfoComparisonCmp extends Component {
 
                 testCasesInfoElem = 
                     <div>
-                        <div className="section-title">Test cases executed:</div>
+                        <div className="section-title">Test cases comparison:</div>
                         <div style={{"margin":"10px 0px 0px 0px"}}>
                             <table><tbody>
                                 <tr>

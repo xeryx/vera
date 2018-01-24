@@ -160,7 +160,7 @@ class LoadTestInfoApp extends Component {
                <div style={{ margin: "20px 00px 10px 0px" }}>
                   {allRunsInfoForComparisonCmp}   
                </div> 
-               <div style={{ margin: "10px 00px 10px 0px" }}>
+               <div style={{ margin: "20px 00px 10px 0px" }}>
                   {runTestCasesExtendedInfoComparisonCmp}
                </div>            
             </div>
