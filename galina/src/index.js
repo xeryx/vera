@@ -2,9 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import LoadTestInfoApp from './apps/LoadTestInfoApp';
 
-/*
+
 function getParam(parm) {
-   let query = window.top.location.search.substring(1);
+   let query = window.location.search.substring(1);
    let vars = query.split("&");
    for (let i = 0; i < vars.length; i++) {
       let pair = vars[i].split("=");
@@ -22,8 +22,7 @@ let runId = getParam("runid");
 if (!runId) {
    runId = "";
 }
-*/
-let runId = "";
+
 let heading = "";
 if(window.self === window.top) {
    heading = 
