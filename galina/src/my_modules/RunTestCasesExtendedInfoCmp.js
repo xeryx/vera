@@ -72,7 +72,11 @@ class RunTestCasesExtendedInfoCmp extends Component {
                                  {uniqueTestCases[i]}
                            </td>
                             <td className="row-data-2">{pagesInfoByTestCase[uniqueTestCases[i]]["totalTests"]}</td>
-                            <td className="row-data-1-nolink">{pagesInfoByTestCase[uniqueTestCases[i]]["mostSignificantCall"].url}</td>
+                            <td className="row-data-1"
+                              onClick={(e) => { this.handleRequestUriClick(e,                            
+                                 [uniqueTestCases[i], pagesInfoByTestCase[uniqueTestCases[i]]["mostSignificantCall"].url])}
+                              }> 
+                              {pagesInfoByTestCase[uniqueTestCases[i]]["mostSignificantCall"].url}</td>
                             <td className="row-data-2">{pagesInfoByTestCase[uniqueTestCases[i]]["mostSignificantCall"].count}</td>
                             <td className="row-data-2">{
                                  parseFloat(pagesInfoByTestCase[uniqueTestCases[i]]["mostSignificantCall"].average).toFixed(3)}
@@ -114,7 +118,9 @@ class RunTestCasesExtendedInfoCmp extends Component {
         this.props.callback("openTestCasePagesDialog",data);
     }
 
-    
+    handleRequestUriClick = function(event, data) {
+      this.props.callback("openTestCaseRequestPlotDialog",data);
+  }
 
 }       
 

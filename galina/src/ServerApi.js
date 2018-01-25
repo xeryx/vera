@@ -193,6 +193,35 @@ export function getGraphData(runId, machine, category, counter) {
     );
 };
 
+export function getTestCaseRequestGraphData(runId, testCaseName, requestUri, counter) {
+   let path = '/loaddb/getPageGraphData/' + runId + '/' + testCaseName + '/' + encodeURIComponent(requestUri) +  '/' + encodeURIComponent(counter);
+   let cachedData = null;
+   try {cachedData = localStorage.getItem(path);} catch(err){}   
+   if(cachedData) {
+      return (new Promise(function(resolve, reject) {
+            resolve(JSON.parse(cachedData))
+         })
+      )
+   } 
+   return(
+        fetch(path, {
+            method: "get",
+        })
+        .then(response => response.json())
+        .then(responseJson => new Promise(
+            function(resolve, reject) {
+               if(responseJson.success !== "false") {
+                  saveInLocalStorage(responseJson,path);
+                  resolve(responseJson);
+                }
+                else {
+                  reject(Error(JSON.stringify(responseJson.error)));
+                }
+            })
+        )
+    );
+};
+
 export function getSystemUnderTestResources(runId) {
    let path = '/loaddb/getSystemUnderTestResources/' + runId;
    let cachedData = null;

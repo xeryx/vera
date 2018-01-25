@@ -69,9 +69,14 @@ class MachinePlotCmp extends Component {
 
       }
 
+      let dialogTitle = this.props.machineName;
+      if(Array.isArray(this.props.machineName)) {
+         dialogTitle = this.props.machineName[0] + " - " + this.props.machineName[1];
+      }
+
       componentContent =
          <Dialog
-            title={this.props.machineName}
+            title={dialogTitle}
             titleStyle = {{fontSize:"16px", textAlign:"center"}}
             modal={false}
             open={this.props.isOpen}

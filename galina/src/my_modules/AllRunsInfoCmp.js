@@ -9,7 +9,7 @@ class AllRunsInfoCmp extends Component {
 
    constructor(props) {
       super(props); 
-      this.state = {compareEnabled:false};
+      this.state = {compareEnabled:true};
   }
 
    render() {  

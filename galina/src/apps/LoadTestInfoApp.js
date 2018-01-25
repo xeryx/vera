@@ -11,7 +11,8 @@ import {
    getPageResultsByTestCase,
    getPageResults,
    getTestCaseResults,
-   getSystemUnderTestResources
+   getSystemUnderTestResources, 
+   getTestCaseRequestGraphData
 } from '../ServerApi'
 import AllRunsInfoCmp from '../my_modules/AllRunsInfoCmp'
 import AllRunsInfoForComparisonCmp from '../my_modules/AllRunsInfoForComparisonCmp'
@@ -266,6 +267,18 @@ class LoadTestInfoApp extends Component {
                   .then(response => this.changeWaitingState("MachinePlotCmp", false))
             );
 
+         case "openTestCaseRequestPlotDialog":
+            this.changeWaitingState("MachinePlotCmp", true);
+            this.setState({ 
+               selectedMachinePlotData: {},
+               machinePlotDialogOpen: true, 
+               selectedMachine: data
+            })
+            return(
+               this.getSelectedTestCaseRequestPlotInfo(this.state.selectedRunId, data)
+                  .then(response => this.changeWaitingState("MachinePlotCmp", false))
+            );
+
          case "runMenuChange":
             this.clearState();
             this.setState({
@@ -484,6 +497,39 @@ class LoadTestInfoApp extends Component {
          .catch(error => alert("Error: " + error.message + "\n" + error.stack))
       )
    }
+
+   getSelectedTestCaseRequestPlotInfo = function (runId, testCaseAndRequest) {
+      let promise1 = getTestCaseRequestGraphData(
+         runId,
+         testCaseAndRequest[0],
+         testCaseAndRequest[1],
+         "Avg. Response Time");
+      let promise2 = getTestCaseRequestGraphData(
+         runId,
+         testCaseAndRequest[0],
+         testCaseAndRequest[1],
+         "Requests/Sec");
+      return (Promise.all([promise1, promise2])
+         .then(responses => {
+            if ((responses[0].success === "true") && (responses[1].success === "true")) {
+               let tempPlotData = {
+                  x: responses[0].data[0],
+                  y1: responses[0].data[1],
+                  y2: responses[1].data[1],
+                  title: "Request counters info",
+                  xtitle: "time (mins)",
+                  y1title: "Average response time",
+                  y2title: "Requests/Sec",
+                  y1DataName: "Avg. response time",
+                  y2DataName: "Requests/s",
+               }
+               this.setState({ selectedMachinePlotData: tempPlotData });
+            }
+         })
+         .catch(error => alert("Error: " + error.message + "\n" + error.stack))
+      )
+   }
+
 
    getTestCasePageResults = function (runId, testCaseName) {
       return (
