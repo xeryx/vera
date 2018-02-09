@@ -5,11 +5,21 @@ import CircularProgress from 'material-ui/CircularProgress';
 
 class RunTestCasesExtendedInfoComparisonCmp extends Component {
     
+   constructor(props) {
+      super(props); 
+      this.state = {
+                     sortColumn:0,
+                     sortDescending:true,
+                     sortNumeric:false
+                  };
+      this.compareRows = this.compareRows.bind(this); 
+   }
 
     render() {  
 
         let testCasesInfoElem = "";
         let testCasesInfoRows = [];
+        let testCasesInfoRowsContent = [];
         let testCasesInfoHeaders = [];
 
         let componentContent = "";
@@ -26,7 +36,7 @@ class RunTestCasesExtendedInfoComparisonCmp extends Component {
 
                // Get info for run 1
 
-               let uniqueTestCases = utils.getUniqueKeyValuesInObjectArray(this.props.testCasesPagesInfo, "TestCaseName").sort();             
+               let uniqueTestCases = utils.getUniqueKeyValuesInObjectArray(this.props.testCasesPagesInfo, "TestCaseName");             
                let pagesInfoByTestCase = utils.getObjectofArraysByUniqueKeyValues(this.props.testCasesPagesInfo, "TestCaseName",uniqueTestCases);
 
                for(let i = 0; i< uniqueTestCases.length; i++) {
@@ -91,15 +101,15 @@ class RunTestCasesExtendedInfoComparisonCmp extends Component {
                }
 
                testCasesInfoHeaders = [
-                  <td key={0} className="header-1">Test Case Name</td>,
-                  <td key={1} className="header-1">Main request</td>,
-                  <td key={2} className="header-1">Avg 1 (s)</td>,
-                  <td key={3} className="header-1">Avg 2 (s)</td>,
-                  <td key={4} className="header-1">Delta</td>,
-                  <td key={5} className="header-1">95th %ile 1</td>,
-                  <td key={6} className="header-1">95th %ile 2</td>,
-                  <td key={7} className="header-1">Count 1</td>,
-                  <td key={8} className="header-1">Count 2</td>,                
+                  <td key={0} className="header-2" onClick={(e) => this.handleHeaderClick(e, 0, false)}>Test Case Name</td>,
+                  <td key={1} className="header-2" onClick={(e) => this.handleHeaderClick(e, 1, false)}>Main request</td>,
+                  <td key={2} className="header-2" onClick={(e) => this.handleHeaderClick(e, 2, true)}>Avg 1 (s)</td>,
+                  <td key={3} className="header-2" onClick={(e) => this.handleHeaderClick(e, 3, true)}>Avg 2 (s)</td>,
+                  <td key={4} className="header-2" onClick={(e) => this.handleHeaderClick(e, 4, true)}>Delta</td>,
+                  <td key={5} className="header-2" onClick={(e) => this.handleHeaderClick(e, 5, true)}>95th %ile 1</td>,
+                  <td key={6} className="header-2" onClick={(e) => this.handleHeaderClick(e, 6, true)}>95th %ile 2</td>,
+                  <td key={7} className="header-2" onClick={(e) => this.handleHeaderClick(e, 7, true)}>Count 1</td>,
+                  <td key={8} className="header-2" onClick={(e) => this.handleHeaderClick(e, 8, true)}>Count 2</td>,                
                ];
 
                for (let i = 0; i < uniqueTestCases.length; i++ ) {
@@ -113,38 +123,55 @@ class RunTestCasesExtendedInfoComparisonCmp extends Component {
                         let average_1 = pagesInfoByTestCase[uniqueTestCases[i]]["mostSignificantCall"].average;
                         let average_2 = pagesInfoByTestCase_2[uniqueTestCases[i]]["mostSignificantCall"].average;
                         let averageDelta = average_1-average_2;
-                        let deltaClassName = (averageDelta > 0)?"row-data-delta-red":"row-data-delta-green";
 
-
-                        testCasesInfoRows.push(<tr key={i}>
-                                 <td className="row-data-1-nolink">
-                                    {uniqueTestCases[i]}
-                                 </td>
-                                 <td className="row-data-1-nolink">{urlString}</td>
-                                 <td className="row-data-2">{
-                                    parseFloat(average_1).toFixed(3)}
-                                 </td>
-                                 <td className="row-data-2-cmp">{
-                                    parseFloat(average_2).toFixed(3)}
-                                 </td>    
-                                 <td className={deltaClassName}>{
-                                    parseFloat(averageDelta).toFixed(3)}
-                                 </td> 
-                                 <td className="row-data-2">{
-                                    parseFloat(pagesInfoByTestCase[uniqueTestCases[i]]["mostSignificantCall"].percentile95).toFixed(3)}
-                                 </td>
-                                 <td className="row-data-2-cmp">{
-                                    parseFloat(pagesInfoByTestCase_2[uniqueTestCases[i]]["mostSignificantCall"].percentile95).toFixed(3)}
-                                 </td>                              
-                                 <td className="row-data-2">{pagesInfoByTestCase[uniqueTestCases[i]]["mostSignificantCall"].count}</td>
-                                 <td className="row-data-2-cmp">{pagesInfoByTestCase_2[uniqueTestCases[i]]["mostSignificantCall"].count}</td>                              
-                           </tr>)
-
+                        testCasesInfoRowsContent.push([
+                           uniqueTestCases[i],
+                           urlString,
+                           parseFloat(average_1).toFixed(3),
+                           parseFloat(average_2).toFixed(3),
+                           parseFloat(averageDelta).toFixed(3),
+                           parseFloat(pagesInfoByTestCase[uniqueTestCases[i]]["mostSignificantCall"].percentile95).toFixed(3),
+                           parseFloat(pagesInfoByTestCase_2[uniqueTestCases[i]]["mostSignificantCall"].percentile95).toFixed(3), 
+                           pagesInfoByTestCase[uniqueTestCases[i]]["mostSignificantCall"].count, 
+                           pagesInfoByTestCase_2[uniqueTestCases[i]]["mostSignificantCall"].count
+                        ]);
                      }
                   }
                }
 
-                testCasesInfoElem = 
+               testCasesInfoRowsContent.sort(this.compareRows);
+
+               for (let i = 0; i < testCasesInfoRowsContent.length; i++ ) {
+                  
+                  let deltaClassName = (testCasesInfoRowsContent[i][4] > 0)?"row-data-delta-red":"row-data-delta-green";
+
+                  testCasesInfoRows.push(<tr key={i}>
+                     <td className="row-data-1-nolink">
+                        {testCasesInfoRowsContent[i][0]}
+                     </td>
+                     <td className="row-data-1-nolink">{testCasesInfoRowsContent[i][1]}</td>
+                     <td className="row-data-2">{
+                        testCasesInfoRowsContent[i][2]}
+                     </td>
+                     <td className="row-data-2-cmp">{
+                        testCasesInfoRowsContent[i][3]}
+                     </td>    
+                     <td className={deltaClassName}>{
+                        testCasesInfoRowsContent[i][4]}
+                     </td> 
+                     <td className="row-data-2">{
+                        testCasesInfoRowsContent[i][5]}
+                     </td>
+                     <td className="row-data-2-cmp">{
+                        testCasesInfoRowsContent[i][6]}
+                     </td>                              
+                     <td className="row-data-2">{testCasesInfoRowsContent[i][7]}</td>
+                     <td className="row-data-2-cmp">{testCasesInfoRowsContent[i][8]}</td>                              
+                  </tr>)
+
+               }
+
+               testCasesInfoElem = 
                     <div>
                         <div className="section-title">Test cases comparison:</div>
                         <div style={{"margin":"10px 0px 0px 0px"}}>
@@ -174,11 +201,32 @@ class RunTestCasesExtendedInfoComparisonCmp extends Component {
         this.props.callback("openTestCasePagesDialog",data);
     }
 
-    
+    handleHeaderClick = function(event, column, isNumeric) {
+      this.setState({
+         sortColumn:column,
+         sortDescending:(this.state.sortColumn===column)?!this.state.sortDescending:true,
+         sortNumeric:isNumeric
+      });  
+   }
+
+   compareRows = function(a, b) {
+      let column = this.state.sortColumn;
+
+      let returnValue = 99;
+
+      if (a[column] === b[column]) {
+         return 0;
+      }
+      else {
+         if(this.state.sortNumeric) {
+            return (this.state.sortDescending ? (((a[column] - b[column]) < 0) ? -1 : 1) : (((b[column] - a[column]) < 0) ? -1 : 1));
+         } else {
+            return (this.state.sortDescending ? ((a[column] < b[column]) ? -1 : 1) : ((b[column] < a[column]) ? -1 : 1));
+         }
+      }
+   }   
 
 }       
-
-
 
 
 export default RunTestCasesExtendedInfoComparisonCmp;

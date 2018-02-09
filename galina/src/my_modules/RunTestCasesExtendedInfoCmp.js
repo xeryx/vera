@@ -149,7 +149,7 @@ class RunTestCasesExtendedInfoCmp extends Component {
    handleHeaderClick = function(event, column, isNumeric) {
       this.setState({
          sortColumn:column,
-         sortDescending:!this.state.sortDescending,
+         sortDescending:(this.state.sortColumn===column)?!this.state.sortDescending:true,
          sortNumeric:isNumeric
       });  
    }
