@@ -56,6 +56,13 @@ body {
     color:rgb(150, 108, 35);
 
 }
+.header-2 {
+   padding: 10px 10px 10px 5px;
+   font-size: 17px;
+   color:rgb(150, 108, 35);
+   cursor: pointer;
+
+}
 tr,td {
     border: 1px solid black;
     

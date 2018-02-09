@@ -30,9 +30,9 @@ app.use(function(req, res, next){
 //Middleware
 morgan.token('datec', function() {
    let d = new Date();
-   return((d.getMonth() + 1)+"-"+d.getDate()+"-"+d.getFullYear().slice(-2)+" "+d.getHours()+":"+d.getMinutes()+":"+d.getSeconds()) 
+   return((d.getMonth() + 1)+"-"+d.getDate()+"-"+d.getFullYear().toString().slice(-2)+" "+d.getHours()+":"+d.getMinutes()+":"+d.getSeconds()) 
 });
-app.use(morgan(":datec :method :url for :remote-addr", {immediate: true}))
+app.use(morgan("[:datec] :method :url", {immediate: true}))
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
