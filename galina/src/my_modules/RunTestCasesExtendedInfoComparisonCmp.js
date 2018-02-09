@@ -132,8 +132,8 @@ class RunTestCasesExtendedInfoComparisonCmp extends Component {
                            parseFloat(averageDelta).toFixed(3),
                            parseFloat(pagesInfoByTestCase[uniqueTestCases[i]]["mostSignificantCall"].percentile95).toFixed(3),
                            parseFloat(pagesInfoByTestCase_2[uniqueTestCases[i]]["mostSignificantCall"].percentile95).toFixed(3), 
-                           pagesInfoByTestCase[uniqueTestCases[i]]["mostSignificantCall"].count, 
-                           pagesInfoByTestCase_2[uniqueTestCases[i]]["mostSignificantCall"].count
+                           parseInt(pagesInfoByTestCase[uniqueTestCases[i]]["mostSignificantCall"].count, 10), 
+                           parseInt(pagesInfoByTestCase_2[uniqueTestCases[i]]["mostSignificantCall"].count, 10)
                         ]);
                      }
                   }
@@ -211,9 +211,6 @@ class RunTestCasesExtendedInfoComparisonCmp extends Component {
 
    compareRows = function(a, b) {
       let column = this.state.sortColumn;
-
-      let returnValue = 99;
-
       if (a[column] === b[column]) {
          return 0;
       }

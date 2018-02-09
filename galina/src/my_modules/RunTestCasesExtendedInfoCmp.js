@@ -69,9 +69,9 @@ class RunTestCasesExtendedInfoCmp extends Component {
                for (let i = 0; i < uniqueTestCases.length; i++ ) {
                   testCasesInfoRowsContent.push([
                                     uniqueTestCases[i],
-                                    parseInt(pagesInfoByTestCase[uniqueTestCases[i]]["totalTests"]),
+                                    parseInt(pagesInfoByTestCase[uniqueTestCases[i]]["totalTests"], 10),
                                     pagesInfoByTestCase[uniqueTestCases[i]]["mostSignificantCall"].url,
-                                    parseInt(pagesInfoByTestCase[uniqueTestCases[i]]["mostSignificantCall"].count),
+                                    parseInt(pagesInfoByTestCase[uniqueTestCases[i]]["mostSignificantCall"].count, 10),
                                     parseFloat(pagesInfoByTestCase[uniqueTestCases[i]]["mostSignificantCall"].average).toFixed(3),
                                     parseFloat(pagesInfoByTestCase[uniqueTestCases[i]]["mostSignificantCall"].percentile95).toFixed(3)
                                  ])
@@ -156,9 +156,6 @@ class RunTestCasesExtendedInfoCmp extends Component {
 
    compareRows = function(a, b) {
       let column = this.state.sortColumn;
-
-      let returnValue = 99;
-
       if (a[column] === b[column]) {
          return 0;
       }
