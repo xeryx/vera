@@ -88,10 +88,10 @@ class RunTestCasesExtendedInfoCmp extends Component {
                     <td key={5} className="header-2" onClick={(e) => this.handleHeaderClick(e, 5, true)}>95th percentile (s)</td>,
                 ];
 
-               for (let i = 0; i < uniqueTestCases.length; i++ ) {
+               for (let i = 0; i < testCasesInfoRowsContent.length; i++ ) {
                   testCasesInfoRows.push(<tr key={i}>
                         <td className="row-data-1" 
-                              onClick={(e) => this.handleTestCaseClick(e, uniqueTestCases[i])}>
+                              onClick={(e) => this.handleTestCaseClick(e, testCasesInfoRowsContent[i][0])}>
                               {testCasesInfoRowsContent[i][0]}
                         </td>
                         <td className="row-data-2">{testCasesInfoRowsContent[i][1]}</td>
